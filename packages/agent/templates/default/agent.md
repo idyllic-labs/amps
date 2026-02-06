@@ -1,5 +1,5 @@
 ---
-name: {{AGENT_NAME}}
+name: { { AGENT_NAME } }
 ---
 
 # Agent: {{AGENT_NAME}}

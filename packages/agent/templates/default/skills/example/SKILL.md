@@ -10,6 +10,7 @@ This skill demonstrates the Agent Skills standard format.
 ## When to Use
 
 Use this skill when you need to:
+
 - See an example of skill structure
 - Understand how to create new skills
 - Reference the standard format
@@ -26,6 +27,7 @@ Use this skill when you need to:
 You can reference helper files at: {baseDir}/
 
 For example:
+
 - {baseDir}/script.sh
 - {baseDir}/config.json
 
@@ -39,8 +41,8 @@ echo "Skill executed from {baseDir}"
 ```typescript
 // Example TypeScript code
 async function exampleFunction(input: string) {
-  console.log("Processing:", input);
-  return `Result: ${input}`;
+	console.log("Processing:", input);
+	return `Result: ${input}`;
 }
 ```
 

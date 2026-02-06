@@ -1,23 +1,26 @@
 {
-  "name": "@mdx-ai/agent",
-  "version": "0.1.0",
-  "type": "module",
-  "main": "./src/index.ts",
-  "bin": {
-    "mdx-ai-agent": "./bin/mdx-ai-agent.ts"
-  },
-  "files": ["src/", "bin/"],
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "dev": "bun run bin/mdx-ai-agent.ts"
-  },
-  "dependencies": {
-    "@mariozechner/pi-agent-core": "0.51.2",
-    "@mariozechner/pi-ai": "0.51.2",
-    "@mariozechner/pi-tui": "0.51.2",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "@mdx-ai/agent",
+	"version": "0.1.0",
+	"bin": {
+		"mdx-ai-agent": "./bin/mdx-ai-agent.ts"
+	},
+	"files": [
+		"src/",
+		"bin/"
+	],
+	"type": "module",
+	"main": "./src/index.ts",
+	"scripts": {
+		"typecheck": "tsc --noEmit",
+		"dev": "bun run bin/mdx-ai-agent.ts"
+	},
+	"dependencies": {
+		"@mariozechner/pi-agent-core": "0.51.2",
+		"@mariozechner/pi-ai": "0.51.2",
+		"@mariozechner/pi-tui": "0.51.2",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"typescript": "^5.0.0"
+	}
 }

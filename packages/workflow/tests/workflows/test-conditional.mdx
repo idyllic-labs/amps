@@ -8,20 +8,20 @@ The score is {score}.
 
 <If condition={score >= 80}>
 
-  This is a passing grade! Write a congratulations message.
+This is a passing grade! Write a congratulations message.
 
-  <Generation name="message" />
+<Generation name="message" />
 
-  <Set name="passed" value={true} />
+<Set name="passed" value={true} />
 
 </If>
 
 <Else>
 
-  This needs improvement. Write an encouraging message.
+This needs improvement. Write an encouraging message.
 
-  <Generation name="message" />
+<Generation name="message" />
 
-  <Set name="passed" value={false} />
+<Set name="passed" value={false} />
 
 </Else>

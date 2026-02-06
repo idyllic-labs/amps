@@ -12,11 +12,16 @@
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean",
+    "lint": "oxlint packages/ bin/ --ignore-path .gitignore",
+    "format": "oxfmt --write packages/ bin/",
+    "format:check": "oxfmt --check packages/ bin/",
     "mdx-ai": "bun run bin/mdx-ai.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "latest",
+    "oxfmt": "^0.28.0",
+    "oxlint": "^1.43.0",
     "turbo": "latest",
     "typescript": "^5.0.0"
   },

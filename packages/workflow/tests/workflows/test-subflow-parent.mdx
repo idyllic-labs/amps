@@ -8,7 +8,7 @@ Processing {texts.length} documents.
 
 <Loop name="summaries" over={texts}>
 
-  <Flow name="childResult" src="./test-subflow-child.mdx" inputs={{ text: item }} />
+<Flow name="childResult" src="./test-subflow-child.mdx" inputs={{ text: item }} />
 
 </Loop>
 

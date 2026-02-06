@@ -12,21 +12,21 @@ outputs:
 First, identify 3 key aspects to investigate.
 
 <Structured name="aspects">
-  <Field name="items" type="list">
-    <Field name="aspect" type="text" />
-    <Field name="searchQuery" type="text" />
-  </Field>
+	<Field name="items" type="list">
+		<Field name="aspect" type="text" />
+		<Field name="searchQuery" type="text" />
+	</Field>
 </Structured>
 
 <Loop name="research" over={aspects.items}>
 
-  ## {item.aspect}
+## {item.aspect}
 
-  <WebSearch name="search" query={item.searchQuery} maxResults={3} />
+<WebSearch name="search" query={item.searchQuery} maxResults={3} />
 
-  Synthesize the findings for this aspect.
+Synthesize the findings for this aspect.
 
-  <Generation name="synthesis" />
+<Generation name="synthesis" />
 
 </Loop>
 
@@ -36,4 +36,4 @@ Compile all findings into a comprehensive report.
 
 <Generation name="report" />
 
-<Set name="sources" value={research.flatMap(r => r.search.results.map(s => s.url))} />
+<Set name="sources" value={research.flatMap((r) => r.search.results.map((s) => s.url))} />

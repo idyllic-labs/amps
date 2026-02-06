@@ -9,45 +9,47 @@ const args = process.argv.slice(2);
 const agentPath = args[0];
 
 async function main() {
-  // Show help
-  if (!agentPath || agentPath === "help" || agentPath === "--help" || agentPath === "-h") {
-    printHelp();
-    process.exit(agentPath ? 0 : 1);
-  }
+	// Show help
+	if (!agentPath || agentPath === "help" || agentPath === "--help" || agentPath === "-h") {
+		printHelp();
+		process.exit(agentPath ? 0 : 1);
+	}
 
-  // Resolve path
-  const fullPath = resolve(agentPath);
+	// Resolve path
+	const fullPath = resolve(agentPath);
 
-  // Check if agent directory exists
-  if (!existsSync(fullPath)) {
-    console.error(`\x1b[31mError:\x1b[0m Agent directory not found: ${fullPath}`);
-    process.exit(1);
-  }
+	// Check if agent directory exists
+	if (!existsSync(fullPath)) {
+		console.error(`\x1b[31mError:\x1b[0m Agent directory not found: ${fullPath}`);
+		process.exit(1);
+	}
 
-  // Check if AGENT.md exists
-  const agentMdPath = resolve(fullPath, "AGENT.md");
-  if (!existsSync(agentMdPath)) {
-    console.error(`\x1b[31mError:\x1b[0m AGENT.md not found in: ${fullPath}`);
-    console.error(`\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with AGENT.md`);
-    process.exit(1);
-  }
+	// Check if AGENT.md exists
+	const agentMdPath = resolve(fullPath, "AGENT.md");
+	if (!existsSync(agentMdPath)) {
+		console.error(`\x1b[31mError:\x1b[0m AGENT.md not found in: ${fullPath}`);
+		console.error(
+			`\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with AGENT.md`,
+		);
+		process.exit(1);
+	}
 
-  // Extract agent name from path
-  const agentName = agentPath.split("/").pop() || "Agent";
+	// Extract agent name from path
+	const agentName = agentPath.split("/").pop() || "Agent";
 
-  console.log(`\x1b[36mStarting ${agentName}...\x1b[0m\n`);
+	console.log(`\x1b[36mStarting ${agentName}...\x1b[0m\n`);
 
-  // Initialize runtime
-  const runtime = new AgentRuntime(fullPath);
-  await runtime.initialize();
+	// Initialize runtime
+	const runtime = new AgentRuntime(fullPath);
+	await runtime.initialize();
 
-  // Start TUI
-  const tui = new AgentTUI(runtime, agentName);
-  await tui.start();
+	// Start TUI
+	const tui = new AgentTUI(runtime, agentName);
+	await tui.start();
 }
 
 function printHelp() {
-  console.log(`
+	console.log(`
 \x1b[36mmdx-ai agent\x1b[0m — Markdown-first agent runtime
 
 \x1b[33mUsage:\x1b[0m
@@ -71,6 +73,6 @@ function printHelp() {
 }
 
 main().catch((error) => {
-  console.error("\x1b[31mError:\x1b[0m", error.message);
-  process.exit(1);
+	console.error("\x1b[31mError:\x1b[0m", error.message);
+	process.exit(1);
 });
