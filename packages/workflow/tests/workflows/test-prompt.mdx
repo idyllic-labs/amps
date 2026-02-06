@@ -1,0 +1,13 @@
+---
+name: prompt-test
+inputs:
+  topic: text
+---
+
+You said you're interested in {topic}. Let's narrow that down.
+
+<Prompt name="subtopic" message="What specific aspect of this topic?" default={topic} />
+
+Write a one-paragraph summary about {subtopic}.
+
+<Generation name="summary" />

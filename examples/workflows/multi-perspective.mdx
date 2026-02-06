@@ -1,0 +1,36 @@
+---
+name: multi-perspective
+inputs:
+  question: text
+---
+
+# {question}
+
+Consider this question from three different perspectives.
+
+<Structured name="perspectives">
+  <Field name="items" type="list">
+    <Field name="role" type="text" description="A specific expert role (e.g. economist, ethicist, engineer)" />
+    <Field name="angle" type="text" description="What aspect they would focus on" />
+  </Field>
+</Structured>
+
+<Loop name="viewpoints" over={perspectives.items}>
+
+## Perspective: {item.role}
+
+You are a {item.role}. Answer the question "{question}" focusing on {item.angle}. Be specific and opinionated.
+
+<Generation name="response" />
+
+</Loop>
+
+# Synthesis
+
+You've now heard from {perspectives.items.length} experts:
+
+{viewpoints.map(v => `- **${v.item.role}**: ${v.response.slice(0, 100)}...`).join("\n")}
+
+Synthesize these perspectives into a balanced conclusion. Where do they agree? Where do they conflict? What's the most important takeaway?
+
+<Generation name="synthesis" />

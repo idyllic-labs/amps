@@ -1,0 +1,39 @@
+---
+name: chain-of-thought
+inputs:
+  problem: text
+---
+
+Solve this step by step: {problem}
+
+Step 1: Identify what we know and what we need to find.
+
+<Generation name="step1" />
+
+Step 2: Plan an approach.
+
+<Generation name="step2" />
+
+Step 3: Execute the plan.
+
+<Generation name="step3" />
+
+Step 4: Verify the answer. Check for mistakes.
+
+<Generation name="verification" />
+
+<If condition={verification.toLowerCase().includes("mistake") || verification.toLowerCase().includes("error") || verification.toLowerCase().includes("incorrect")}>
+
+A mistake was found. Redo the solution with corrections.
+
+<Generation name="corrected" />
+
+<Set name="answer" value={corrected} />
+
+</If>
+
+<Else>
+
+<Set name="answer" value={step3} />
+
+</Else>

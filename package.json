@@ -1,0 +1,26 @@
+{
+  "name": "mdx-ai",
+  "private": true,
+  "packageManager": "bun@1.1.29",
+  "workspaces": ["packages/*"],
+  "bin": {
+    "mdx-ai": "./bin/mdx-ai.ts"
+  },
+  "scripts": {
+    "postinstall": "bash scripts/patch-pi-ai.sh",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "mdx-ai": "bun run bin/mdx-ai.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "latest",
+    "turbo": "latest",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "commander": "^14.0.3"
+  }
+}

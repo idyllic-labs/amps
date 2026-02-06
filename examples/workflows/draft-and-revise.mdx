@@ -1,0 +1,31 @@
+---
+name: draft-and-revise
+inputs:
+  task: text
+---
+
+# Draft & Revise
+
+{task}
+
+<Select name="format" message="What format?" options={["Email", "Slack message", "Short memo", "Tweet thread", "LinkedIn post"]} />
+
+<Select name="tone" message="What tone?" options={["Professional", "Friendly", "Urgent", "Casual"]} />
+
+Write a {format} with a {tone} tone for the following: {task}
+
+<Generation name="draft" />
+
+<Confirm name="satisfied" message="Happy with this draft?" />
+
+<If condition={!satisfied}>
+
+<Prompt name="feedback" message="What would you change?" />
+
+Revise the draft above. The user's feedback: {feedback}
+
+Keep the same format ({format}) and general tone ({tone}), but incorporate the requested changes.
+
+<Generation name="revision" />
+
+</If>

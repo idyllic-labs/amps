@@ -1,0 +1,11 @@
+---
+name: child
+inputs:
+  text: text
+---
+
+Summarize this in one sentence: {text}
+
+<Generation name="summary" />
+
+<Set name="wordCount" value={summary.split(" ").length} />

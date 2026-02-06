@@ -1,0 +1,40 @@
+---
+name: code-review
+inputs:
+  code: text
+  language: text = "TypeScript"
+---
+
+Review this {language} code:
+
+```{language}
+{code}
+```
+
+First, identify any issues.
+
+<Structured name="issues">
+  <Field name="items" type="list">
+    <Field name="severity" type="text" description="critical, warning, or suggestion" />
+    <Field name="line" type="text" description="Approximate line or section" />
+    <Field name="description" type="text" />
+    <Field name="fix" type="text" description="Suggested fix" />
+  </Field>
+  <Field name="overallQuality" type="number" description="1-10 rating" />
+</Structured>
+
+<If condition={issues.overallQuality >= 8}>
+
+The code looks good overall. Write a brief summary of what it does well.
+
+<Generation name="summary" />
+
+</If>
+
+<Else>
+
+The code needs some work. Write a revised version that addresses all the issues found.
+
+<Generation name="revised" />
+
+</Else>

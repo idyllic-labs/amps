@@ -1,0 +1,11 @@
+---
+name: search-test
+inputs:
+  query: text
+---
+
+<WebSearch name="results" query={query} maxResults={3} />
+
+Based on these search results, provide a brief summary.
+
+<Generation name="summary" />

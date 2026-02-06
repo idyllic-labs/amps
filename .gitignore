@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+
+# Agent runtime files
+**/state/
+**/logs/
+**/sessions/
+
+# External references (not part of the project)
+external
+
+# OS
+.DS_Store

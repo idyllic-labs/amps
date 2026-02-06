@@ -1,0 +1,33 @@
+---
+name: confirm-test
+inputs:
+  topic: text
+---
+
+# Draft and Review: {topic}
+
+Write a first draft about {topic}. Keep it to 2-3 sentences.
+
+<Generation name="draft" />
+
+<Confirm name="happy" message="Are you happy with this draft?" />
+
+<If condition={happy}>
+
+Great! Let's polish it.
+
+Expand and improve the draft above into a full paragraph.
+
+<Generation name="final" />
+
+</If>
+
+<Else>
+
+<Prompt name="feedback" message="What should change?" />
+
+Rewrite the draft incorporating this feedback: {feedback}
+
+<Generation name="final" />
+
+</Else>

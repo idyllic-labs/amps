@@ -1,0 +1,27 @@
+---
+name: conditional-test
+inputs:
+  score: number
+---
+
+The score is {score}.
+
+<If condition={score >= 80}>
+
+  This is a passing grade! Write a congratulations message.
+
+  <Generation name="message" />
+
+  <Set name="passed" value={true} />
+
+</If>
+
+<Else>
+
+  This needs improvement. Write an encouraging message.
+
+  <Generation name="message" />
+
+  <Set name="passed" value={false} />
+
+</Else>

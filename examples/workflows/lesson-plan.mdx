@@ -1,0 +1,36 @@
+---
+name: lesson-plan
+inputs:
+  subject: text
+  level: text = "high school"
+---
+
+# Lesson Plan: {subject}
+
+Identify 4 subtopics for teaching {subject} at the {level} level. Order them from foundational to advanced.
+
+<Structured name="subtopics">
+  <Field name="items" type="list">
+    <Field name="title" type="text" />
+    <Field name="description" type="text" description="One sentence explaining what this covers" />
+    <Field name="prerequisite" type="text" description="What students should know first" />
+  </Field>
+</Structured>
+
+<Select name="focus" message="Which subtopic should the lesson focus on?" options={subtopics.items} labelKey="title" />
+
+<Prompt name="duration" message="How long is the lesson? (e.g. 45 minutes, 1 hour)" default="45 minutes" />
+
+<Select name="style" message="Teaching style?" options={["Lecture with examples", "Socratic discussion", "Hands-on activity", "Flipped classroom (pre-reading + in-class practice)"]} />
+
+Design a {duration} lesson plan for "{focus}" using a {style} approach. Target audience: {level} students.
+
+Include:
+- Learning objectives (2-3)
+- Warm-up / hook (5 min)
+- Main instruction
+- Student activity
+- Assessment / check for understanding
+- Materials needed
+
+<Generation name="lesson" />

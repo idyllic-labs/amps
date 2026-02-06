@@ -1,0 +1,26 @@
+---
+name: select-test
+inputs:
+  topic: text
+---
+
+# Creative Writing: {topic}
+
+First, brainstorm 3 creative angles for this topic.
+
+<Structured name="angles">
+  <Field name="items" type="list">
+    <Field name="title" type="text" description="Short title for this angle" />
+    <Field name="hook" type="text" description="Opening hook sentence" />
+  </Field>
+</Structured>
+
+{/* Generative select — options come from the LLM output above */}
+<Select name="chosen_angle" message="Which angle do you want to explore?" options={angles.items} labelKey="title" />
+
+<Select name="tone" message="What tone?" options={["Playful", "Serious", "Surreal", "Nostalgic"]} />
+
+Now write a short piece about "{topic}" from the angle: {chosen_angle}
+Use a {tone} tone.
+
+<Generation name="piece" />

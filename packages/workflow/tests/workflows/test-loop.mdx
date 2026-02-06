@@ -1,0 +1,23 @@
+---
+name: loop-test
+inputs:
+  items: list<text>
+---
+
+I will process each item.
+
+<Loop name="processed" over={items}>
+
+  ## Item {index + 1}: {item}
+
+  <Structured name="result">
+    <Field name="original" type="text" />
+    <Field name="uppercase" type="text" />
+    <Field name="length" type="number" />
+  </Structured>
+
+</Loop>
+
+Done processing {items.length} items.
+
+<Generation name="summary" />

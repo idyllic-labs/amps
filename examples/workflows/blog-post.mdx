@@ -1,0 +1,29 @@
+---
+name: blog-post
+inputs:
+  topic: text
+  tone: text = "conversational"
+  wordCount: number = 500
+---
+
+Write an outline for a blog post about "{topic}" in a {tone} tone, approximately {wordCount} words.
+
+<Structured name="outline">
+  <Field name="title" type="text" description="Catchy blog post title" />
+  <Field name="sections" type="list">
+    <Field name="heading" type="text" />
+    <Field name="bulletPoints" type="list">
+      <Field type="text" />
+    </Field>
+  </Field>
+</Structured>
+
+Now write the full blog post following this outline:
+
+Title: {outline.title}
+
+{outline.sections.map(s => `## ${s.heading}\n${s.bulletPoints.map(b => `- ${b}`).join("\n")}`).join("\n\n")}
+
+Write approximately {wordCount} words in a {tone} tone.
+
+<Generation name="post" />

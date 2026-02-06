@@ -1,0 +1,31 @@
+---
+name: interview-prep
+inputs:
+  role: text
+---
+
+# Interview Prep: {role}
+
+Generate 5 likely interview questions for a {role} position, ranging from behavioral to technical.
+
+<Structured name="questions">
+  <Field name="items" type="list">
+    <Field name="question" type="text" description="The interview question" />
+    <Field name="category" type="text" description="behavioral, technical, or situational" />
+    <Field name="difficulty" type="text" description="easy, medium, or hard" />
+  </Field>
+</Structured>
+
+<Select name="picked" message="Which question do you want to practice?" options={questions.items} labelKey="question" />
+
+<Select name="approach" message="How should the answer be framed?" options={["STAR method (Situation, Task, Action, Result)", "Direct and concise", "Story-driven with examples"]} />
+
+Draft a strong answer to this question: {picked}
+
+Use the {approach} framework. Be specific — invent realistic but plausible details for a strong candidate.
+
+<Generation name="answer" />
+
+Now critique this answer. What's strong? What could be improved? Give 2-3 specific suggestions.
+
+<Generation name="critique" />

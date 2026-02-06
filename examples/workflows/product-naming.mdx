@@ -1,0 +1,48 @@
+---
+name: product-naming
+inputs:
+  description: text
+---
+
+# Product Naming Workshop
+
+Product description: {description}
+
+Brainstorm 6 potential product names. Mix different naming strategies: descriptive, evocative, invented words, compound words, metaphors.
+
+<Structured name="names">
+  <Field name="items" type="list">
+    <Field name="name" type="text" />
+    <Field name="strategy" type="text" description="The naming strategy used" />
+    <Field name="tagline" type="text" description="A short tagline that pairs with this name" />
+  </Field>
+</Structured>
+
+<Select name="favorite" message="Which name resonates most?" options={names.items} labelKey="name" />
+
+<Confirm name="wantVariations" message="Want to see variations on this name?" />
+
+<If condition={wantVariations}>
+
+Generate 5 variations of "{favorite}" — riffs, alternate spellings, extensions, or mashups that preserve the same feel.
+
+<Structured name="variations">
+  <Field name="items" type="list">
+    <Field name="variation" type="text" />
+    <Field name="reasoning" type="text" description="Why this variation works" />
+  </Field>
+</Structured>
+
+<Select name="finalName" message="Pick your final name" options={variations.items} labelKey="variation" />
+
+</If>
+
+<Else>
+
+<Set name="finalName" value={favorite} />
+
+</Else>
+
+Write a short brand identity brief for "{finalName}". Include: brand voice (3 adjectives), target audience, one-paragraph positioning statement, and 3 potential use cases for the name in marketing.
+
+<Generation name="brief" />

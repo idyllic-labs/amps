@@ -1,0 +1,26 @@
+---
+name: summarize
+inputs:
+  text: text
+  format: text = "bullets"
+---
+
+Summarize the following text:
+
+{text}
+
+<If condition={format === "bullets"}>
+
+Provide a bullet-point summary with the key takeaways.
+
+<Generation name="summary" />
+
+</If>
+
+<Else>
+
+Provide a one-paragraph summary.
+
+<Generation name="summary" />
+
+</Else>
