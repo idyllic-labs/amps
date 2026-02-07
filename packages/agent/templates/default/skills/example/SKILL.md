@@ -41,8 +41,8 @@ echo "Skill executed from {baseDir}"
 ```typescript
 // Example TypeScript code
 async function exampleFunction(input: string) {
-	console.log("Processing:", input);
-	return `Result: ${input}`;
+  console.log("Processing:", input);
+  return `Result: ${input}`;
 }
 ```
 
