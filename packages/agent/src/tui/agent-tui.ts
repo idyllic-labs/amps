@@ -9,7 +9,9 @@ import {
   type SlashCommand,
 } from "@mariozechner/pi-tui";
 import type { AgentRuntime } from "../runtime/agent-runtime.ts";
-import { SessionManager, type ChatMessage } from "./session-manager.ts";
+import { SessionManager } from "./session-manager.ts";
+import type { AgentMessage } from "@mariozechner/pi-agent-core";
+import type { AssistantMessage, ToolResultMessage } from "@mariozechner/pi-ai";
 import { FooterComponent, type FooterStats } from "./components/footer.ts";
 import { theme } from "./theme.ts";
 import { InterceptTerminal } from "./terminal.ts";
@@ -83,7 +85,7 @@ export class AgentTUI {
   private statusContainer: Container;
   private editorContainer: Container;
   private footer!: FooterComponent;
-  private historyCache: ChatMessage[] = [];
+  private historyCache: AgentMessage[] = [];
   private modelInfo: { id: string; provider: string; contextWindow: number } | undefined;
 
   // Components
@@ -135,7 +137,7 @@ export class AgentTUI {
     const identity = this.runtime.getIdentity();
     const logo =
       `${theme.primary}╔═══════════════════════════════════════════╗\n` +
-      `║  ${theme.success}mdx-ai${theme.reset} ${theme.muted}→ ${theme.primary}${this.agentName}${theme.reset}                          ${theme.primary}║\n` +
+      `║  ${theme.success}amps${theme.reset} ${theme.muted}→ ${theme.primary}${this.agentName}${theme.reset}                            ${theme.primary}║\n` +
       `${theme.primary}╚═══════════════════════════════════════════╝${theme.reset}\n`;
 
     const purpose = identity?.purpose ? `${theme.muted}${identity.purpose}${theme.reset}\n` : "";
@@ -218,31 +220,15 @@ export class AgentTUI {
     this.chatContainer.addChild(new Spacer(1));
     this.tui.requestRender();
 
-    // Save user message
-    await this.sessionManager.saveMessage({
-      role: "user",
-      content: text,
-      timestamp: new Date().toISOString(),
-    });
-
     try {
       // Reset streaming state — component created lazily on first text_delta
       this.streamingMessageText = "";
       this.streamingComponent = undefined;
-      let fullResponseText = "";
 
-      this.historyCache = (await this.sessionManager.loadHistory()).filter(
-        (message): message is ChatMessage & { role: "user" | "assistant" } =>
-          message.role === "user" || message.role === "assistant",
-      );
+      // Load full message history and pass to runtime
+      this.historyCache = await this.sessionManager.loadHistory();
 
-      // Process stream — now yields AgentEvent
-      const filteredHistory = this.historyCache.filter(
-        (message): message is ChatMessage & { role: "user" | "assistant" } =>
-          message.role === "user" || message.role === "assistant",
-      );
-
-      for await (const event of this.runtime.processTaskStream(text, filteredHistory)) {
+      for await (const event of this.runtime.processTaskStream(text, this.historyCache)) {
         switch (event.type) {
           case "message_update": {
             const inner = event.assistantMessageEvent;
@@ -254,7 +240,6 @@ export class AgentTUI {
                 this.chatContainer.addChild(this.streamingComponent);
               }
               this.streamingMessageText += inner.delta;
-              fullResponseText += inner.delta;
               this.streamingComponent.setText(this.streamingMessageText);
               this.tui.requestRender();
             } else if (inner.type === "done") {
@@ -322,16 +307,9 @@ export class AgentTUI {
         }
       }
 
-      // Save full assistant response (accumulated across all turns)
-      if (fullResponseText.trim()) {
-        await this.sessionManager.saveMessage({
-          role: "assistant",
-          content: fullResponseText,
-          timestamp: new Date().toISOString(),
-        });
-      }
-
-      this.historyCache = await this.sessionManager.loadHistory();
+      // Save full message history (includes tool calls and results)
+      this.historyCache = this.runtime.getMessages();
+      await this.sessionManager.saveMessages(this.historyCache);
 
       this.streamingComponent = undefined;
       this.tui.requestRender();
@@ -399,14 +377,50 @@ export class AgentTUI {
     this.historyCache = history;
     for (const msg of history) {
       if (msg.role === "user") {
+        const text =
+          typeof msg.content === "string"
+            ? msg.content
+            : msg.content
+                .filter((c): c is { type: "text"; text: string } => c.type === "text")
+                .map((c) => c.text)
+                .join("");
         this.chatContainer.addChild(new Spacer(1));
-        this.chatContainer.addChild(
-          new Text(`${theme.userBg} ${msg.content} ${theme.reset}`, 1, 0),
-        );
+        this.chatContainer.addChild(new Text(`${theme.userBg} ${text} ${theme.reset}`, 1, 0));
         this.chatContainer.addChild(new Spacer(1));
       } else if (msg.role === "assistant") {
-        this.chatContainer.addChild(new Markdown(msg.content, 1, 0, markdownTheme));
-        this.chatContainer.addChild(new Spacer(1));
+        const text = (msg as AssistantMessage).content
+          .filter((c): c is { type: "text"; text: string } => c.type === "text")
+          .map((c) => c.text)
+          .join("");
+        if (text) {
+          this.chatContainer.addChild(new Markdown(text, 1, 0, markdownTheme));
+          this.chatContainer.addChild(new Spacer(1));
+        }
+        // Show tool calls from history
+        for (const c of (msg as AssistantMessage).content) {
+          if (c.type === "toolCall") {
+            const display = formatToolArgs(c.name, c.arguments);
+            this.chatContainer.addChild(
+              new Text(
+                `${theme.muted}[tool:${c.name}]${theme.reset} ${theme.accent}${display}${theme.reset}`,
+                1,
+                0,
+              ),
+            );
+          }
+        }
+      } else if (msg.role === "toolResult") {
+        const resultMsg = msg as ToolResultMessage;
+        const resultText =
+          resultMsg.content
+            ?.filter((c): c is { type: "text"; text: string } => c.type === "text")
+            .map((c) => c.text)
+            .join("") ?? "";
+        if (resultText) {
+          const truncated = resultText.length > 200 ? resultText.slice(0, 197) + "..." : resultText;
+          const color = resultMsg.isError ? theme.error : theme.muted;
+          this.chatContainer.addChild(new Text(`${color}  ${truncated}${theme.reset}`, 1, 0));
+        }
       }
     }
   }
@@ -417,9 +431,7 @@ export class AgentTUI {
     this.modelInfo = this.runtime.getLastModelInfo();
 
     if ((await this.sessionManager.loadHistory()).length === 0) {
-      this.chatContainer.addChild(
-        new Text(`${theme.success}Welcome to mdx-ai!${theme.reset}`, 1, 0),
-      );
+      this.chatContainer.addChild(new Text(`${theme.success}Welcome to amps!${theme.reset}`, 1, 0));
       this.chatContainer.addChild(new Spacer(1));
     }
 

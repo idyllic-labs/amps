@@ -1,7 +1,8 @@
 import { readdirSync, existsSync, statSync } from "fs";
 import { resolve } from "path";
 import { getAgentsDir, getAgentDir } from "../shared/config.ts";
-import { parseMarkdown, parseAgentIdentity, parseHeartbeat } from "../runtime/markdown-parser.ts";
+import { parseMarkdown, parseHeartbeat } from "../runtime/markdown-parser.ts";
+import { parseAgentMdx } from "../runtime/mdx-parser.ts";
 import type { DiscoveredAgent } from "../types/daemon.ts";
 import { logger } from "../shared/logger.ts";
 
@@ -51,13 +52,13 @@ export async function loadAgent(agentName: string): Promise<DiscoveredAgent> {
     throw new Error(`Agent "${agentName}" not found at ${agentPath}`);
   }
 
-  const agentMdPath = resolve(agentPath, "agent.md");
+  const agentMdxPath = resolve(agentPath, "agent.mdx");
   const heartbeatMdPath = resolve(agentPath, "heartbeat.md");
   const skillsDir = resolve(agentPath, "skills");
 
   // Check required files exist
-  if (!existsSync(agentMdPath)) {
-    throw new Error(`agent.md not found for "${agentName}"`);
+  if (!existsSync(agentMdxPath)) {
+    throw new Error(`agent.mdx not found for "${agentName}"`);
   }
 
   if (!existsSync(heartbeatMdPath)) {
@@ -67,11 +68,11 @@ export async function loadAgent(agentName: string): Promise<DiscoveredAgent> {
   // Parse agent identity
   let identity;
   try {
-    const agentMdContent = await Bun.file(agentMdPath).text();
-    const agentMd = parseMarkdown(agentMdContent);
-    identity = parseAgentIdentity(agentMd);
+    const content = await Bun.file(agentMdxPath).text();
+    const def = parseAgentMdx(content);
+    identity = def.identity;
   } catch (error) {
-    logger.warn(`Failed to parse agent.md for "${agentName}":`, error);
+    logger.warn(`Failed to parse agent.mdx for "${agentName}":`, error);
   }
 
   // Parse heartbeat config
@@ -87,7 +88,7 @@ export async function loadAgent(agentName: string): Promise<DiscoveredAgent> {
   return {
     name: agentName,
     path: agentPath,
-    agentMdPath,
+    agentMdPath: agentMdxPath,
     heartbeatMdPath,
     skillsDir,
     identity,

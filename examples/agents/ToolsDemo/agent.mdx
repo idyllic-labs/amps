@@ -1,0 +1,38 @@
+---
+name: ToolsDemo
+---
+
+# Agent: ToolsDemo
+
+## Purpose
+
+Demonstrate inline tool definitions. Can tell the time and do simple math.
+
+## Capabilities
+
+- Report the current time
+- Evaluate arithmetic expressions
+
+## Constraints
+
+- Only use the provided inline tools
+
+<Tool name="get_time" description="Get the current date and time as an ISO timestamp">
+
+```typescript
+async function execute(params: {}, ctx: any) {
+	return new Date().toISOString()
+}
+```
+</Tool>
+
+<Tool name="calculate" description="Evaluate a simple arithmetic expression and return the result">
+  <Param name="expression" type="string" description="Arithmetic expression to evaluate (e.g. '2 + 2')" />
+
+```typescript
+async function execute(params: { expression: string }, ctx: any) {
+	const result = new Function(`return (${params.expression})`)()
+	return String(result)
+}
+```
+</Tool>

@@ -3,33 +3,33 @@ import { homedir } from "os";
 import { resolve } from "path";
 
 /**
- * Get the mdx-ai home directory
+ * Get the amps home directory
  * Priority:
- * 1. MDX_AI_HOME environment variable
- * 2. ./mdx-ai-home (for local testing)
- * 3. ~/.mdx-ai (default)
+ * 1. AMPS_HOME environment variable
+ * 2. ./amps-home (for local testing)
+ * 3. ~/.amps (default)
  */
-export function getMdxAiHome(): string {
+export function getAmpsHome(): string {
   // Check environment variable
-  if (process.env.MDX_AI_HOME) {
-    return resolve(process.env.MDX_AI_HOME);
+  if (process.env.AMPS_HOME) {
+    return resolve(process.env.AMPS_HOME);
   }
 
   // Check for local testing directory
-  const localHome = resolve(process.cwd(), "mdx-ai-home");
+  const localHome = resolve(process.cwd(), "amps-home");
   if (existsSync(localHome)) {
     return localHome;
   }
 
-  // Default to ~/.mdx-ai
-  return resolve(homedir(), ".mdx-ai");
+  // Default to ~/.amps
+  return resolve(homedir(), ".amps");
 }
 
 /**
  * Get the agents directory path
  */
 export function getAgentsDir(): string {
-  return resolve(getMdxAiHome(), "agents");
+  return resolve(getAmpsHome(), "agents");
 }
 
 /**
@@ -43,7 +43,7 @@ export function getAgentDir(agentName: string): string {
  * Get the daemon PID file path
  */
 export function getDaemonPidPath(): string {
-  return resolve(getMdxAiHome(), "daemon.pid");
+  return resolve(getAmpsHome(), "daemon.pid");
 }
 
 /**

@@ -1,0 +1,27 @@
+# Development
+node_modules/
+.turbo/
+*.tsbuildinfo
+.env
+.env.local
+.DS_Store
+
+# Agent runtime files (generated at runtime, not part of package)
+**/state/
+**/logs/
+**/sessions/
+
+# Dev/CI files
+tests/
+*.test.ts
+WORKLOG.md
+TODO.md
+spec.md
+.gitignore
+tsconfig.json
+turbo.json
+external/
+
+# Dev tooling configs
+packages/*/tsconfig.json
+packages/*/package.json

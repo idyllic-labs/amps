@@ -1,29 +1,12 @@
 import { existsSync } from "fs";
 import { resolve } from "path";
 import { ensureDir } from "../shared/config.ts";
-
-export interface ChatMessage {
-  role: "user" | "assistant" | "system";
-  content: string;
-  timestamp: string;
-  usage?: {
-    input: number;
-    output: number;
-    cacheRead: number;
-    cacheWrite: number;
-    totalTokens: number;
-    cost: {
-      input: number;
-      output: number;
-      cacheRead: number;
-      cacheWrite: number;
-      total: number;
-    };
-  };
-}
+import type { AgentMessage } from "@mariozechner/pi-agent-core";
 
 /**
- * Manages chat session storage
+ * Manages chat session storage.
+ * Stores the full AgentMessage[] array (including tool calls and results)
+ * so history can be replayed exactly via agent.replaceMessages().
  */
 export class SessionManager {
   private agentPath: string;
@@ -39,9 +22,9 @@ export class SessionManager {
   }
 
   /**
-   * Load chat history from session
+   * Load full message history from session
    */
-  async loadHistory(): Promise<ChatMessage[]> {
+  async loadHistory(): Promise<AgentMessage[]> {
     if (!existsSync(this.historyPath)) {
       return [];
     }
@@ -56,14 +39,12 @@ export class SessionManager {
   }
 
   /**
-   * Save a message to session history
+   * Save the full message array to session history.
+   * This replaces the entire history file with the current state.
    */
-  async saveMessage(message: ChatMessage): Promise<void> {
-    const history = await this.loadHistory();
-    history.push(message);
-
+  async saveMessages(messages: AgentMessage[]): Promise<void> {
     await ensureDir(this.sessionPath);
-    await Bun.write(this.historyPath, JSON.stringify(history, null, 2));
+    await Bun.write(this.historyPath, JSON.stringify(messages, null, 2));
   }
 
   /**

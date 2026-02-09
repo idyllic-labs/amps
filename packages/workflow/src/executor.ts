@@ -42,9 +42,9 @@ import { interpolateString, evaluateCondition, resolveExpression } from "./expre
 const FALLBACK_MODEL = "azure/gpt-5.2";
 
 function getDefaultModel(): string {
-  if (process.env.MDX_AI_MODEL) return process.env.MDX_AI_MODEL;
+  if (process.env.AMPS_MODEL) return process.env.AMPS_MODEL;
   try {
-    const configPath = resolve(homedir(), ".mdx-ai", "config.json");
+    const configPath = resolve(homedir(), ".amps", "config.json");
     if (existsSync(configPath)) {
       const config = JSON.parse(readFileSync(configPath, "utf-8"));
       if (config.defaultModel) return config.defaultModel;

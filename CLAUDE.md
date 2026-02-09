@@ -1,6 +1,6 @@
-# mdx-ai
+# amps
 
-Scriptable AI tools that run locally. Monorepo with two packages.
+Agent MetaProgramming System. Scriptable AI tools that run locally. Monorepo with three packages.
 
 ## Stack
 
@@ -21,21 +21,22 @@ bun run typecheck        # Typecheck all packages (via turbo)
 bun run lint             # Lint with oxlint
 bun run format           # Format with oxfmt
 bun run format:check     # Check formatting without writing
-bun run mdx-ai           # Run the CLI
+bun run amps             # Run the CLI
 ```
 
 ## Structure
 
 ```
-bin/mdx-ai.ts                          # Unified CLI dispatcher (commander)
-packages/workflow/                      # @mdx-ai/workflow — parser, executor, TUI
+bin/amps.js                            # CLI entry point (thin wrapper)
+packages/cli/bin/mdx-ai.ts             # CLI dispatcher (commander)
+packages/workflow/                      # workflow — parser, executor, TUI
   bin/mdx-ai-workflow.ts                # Workflow sub-CLI
   src/types.ts                          # All shared types
   src/parser.ts                         # Regex-based MDX parser
   src/executor.ts                       # Execution engine
   src/expressions.ts                    # Expression evaluator
   src/tui/                              # Workflow TUI
-packages/agent/                         # @mdx-ai/agent — persistent agent runtime
+packages/agent/                         # agent — persistent agent runtime
   bin/mdx-ai-agent.ts                   # Agent sub-CLI
   src/runtime/                          # Agent runtime, skill loader
   src/tui/                              # Agent TUI
@@ -50,7 +51,7 @@ examples/agents/                        # Example agents
 - No semicolons where avoidable (oxfmt default)
 - Run `bun run lint` and `bun run format:check` before committing
 - Model string format: `provider/model` (e.g. `azure/gpt-5.2`)
-- Config precedence: `MDX_AI_MODEL` env var > `~/.mdx-ai/config.json` > `azure/gpt-5.2`
+- Config precedence: `AMPS_MODEL` env var > `~/.amps/config.json` > `azure/gpt-5.2`
 
 ## Key Design
 
@@ -59,3 +60,17 @@ examples/agents/                        # Example agents
 **Human-in-the-loop**: `<Prompt>`, `<Select>`, `<Confirm>` suspend the executor via an `inputResolver` callback. The TUI creates pi-tui widgets (Input/SelectList), routes keyboard focus, and resolves when the user submits. Non-interactive mode reads from `--input` flags.
 
 **Parser**: Direct regex parsing (no MDX compiler). Extracts frontmatter (YAML), JSX-like components, prose blocks. Handles nested components (Loop, If, Structured>Field).
+
+## Worklog
+
+Maintain a `WORKLOG.md` at the repo root. After each working session, append an entry capturing what happened. Format:
+
+```markdown
+## 2026-02-08 - 10:26 PM
+
+Brief description of what was done, challenges considered, design tensions,
+resolutions, and open questions. Write like notes for a future you — enough
+context to reconstruct what happened and why, but not verbose.
+```
+
+Keep entries brief and humanly relatable. Capture: decisions made, tradeoffs weighed, bugs hit, things learned, open threads.

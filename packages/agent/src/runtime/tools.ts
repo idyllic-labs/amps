@@ -155,6 +155,18 @@ function createWriteFileTool(cwd: string): AgentTool<typeof WriteFileParams> {
   };
 }
 
-export function createBuiltinTools(cwd: string): AgentTool<any>[] {
-  return [createBashTool(cwd), createReadFileTool(cwd), createWriteFileTool(cwd)];
+const DEFAULT_BUILTINS = ["read_file", "write_file"];
+
+/**
+ * Create builtin tools filtered by the enabled set.
+ * Default: read_file, write_file (no bash).
+ * To enable bash, set `builtins: read_file, write_file, bash` in agent.mdx frontmatter.
+ */
+export function createBuiltinTools(cwd: string, enabled?: string[]): AgentTool<any>[] {
+  const set = new Set(enabled ?? DEFAULT_BUILTINS);
+  const tools: AgentTool<any>[] = [];
+  if (set.has("bash")) tools.push(createBashTool(cwd));
+  if (set.has("read_file")) tools.push(createReadFileTool(cwd));
+  if (set.has("write_file")) tools.push(createWriteFileTool(cwd));
+  return tools;
 }

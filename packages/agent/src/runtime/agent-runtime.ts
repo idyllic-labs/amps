@@ -1,17 +1,19 @@
-import type { AgentIdentity, AgentState } from "../types/index.ts";
+import type { AgentIdentity, AgentState, ToolContext } from "../types/index.ts";
 import type { AgentModule, ModuleContext, PromptResult } from "../types/module.ts";
-import { parseMarkdown, parseAgentIdentity } from "./markdown-parser.ts";
+import { parseAgentMdx, type ParsedToolDef } from "./mdx-parser.ts";
+import { buildToolsFromDefs } from "./tool-builder.ts";
 import { SkillLoader } from "./skill-loader.ts";
 import { createBuiltinTools } from "./tools.ts";
 import { loadModules } from "./module-loader.ts";
-import { Agent, type AgentEvent } from "@mariozechner/pi-agent-core";
+import { existsSync } from "fs";
+import { mkdir } from "fs/promises";
 import {
-  getModel,
-  type AssistantMessage,
-  type Message,
-  type Model,
-  type TextContent,
-} from "@mariozechner/pi-ai";
+  Agent,
+  type AgentEvent,
+  type AgentMessage,
+  type AgentTool,
+} from "@mariozechner/pi-agent-core";
+import { getModel, type Message } from "@mariozechner/pi-ai";
 
 const MAX_TURNS = 50;
 
@@ -26,7 +28,10 @@ export class AgentRuntime {
   private state: AgentState = { context: {} };
   private modules: AgentModule[] = [];
 
-  private agentMdPath: string;
+  private agentMdxPath: string;
+  private frontmatter: Record<string, string> = {};
+  private inlineToolDefs: ParsedToolDef[] = [];
+  private allTools: AgentTool<any>[] = [];
   private skillsDir: string;
   private stateDir: string;
   private memoryDir: string;
@@ -37,7 +42,7 @@ export class AgentRuntime {
 
   constructor(agentDir: string) {
     this.agentDir = agentDir;
-    this.agentMdPath = `${agentDir}/agent.md`;
+    this.agentMdxPath = `${agentDir}/agent.mdx`;
     this.skillsDir = `${agentDir}/skills`;
     this.stateDir = `${agentDir}/state`;
     this.memoryDir = `${agentDir}/memory`;
@@ -50,7 +55,7 @@ export class AgentRuntime {
    * Initialize the runtime — load configs, modules, and create Agent instance
    */
   async initialize(): Promise<void> {
-    console.log("Initializing mdx-ai agent runtime...\n");
+    console.log("Initializing amps agent runtime...\n");
 
     // 1. Load agent identity
     await this.loadAgentIdentity();
@@ -86,8 +91,13 @@ export class AgentRuntime {
       }
     }
 
-    // 7. Collect tools: built-in + module-provided
-    const builtinTools = createBuiltinTools(this.agentDir);
+    // 7. Collect tools: built-in + inline (mdx) + module-provided
+    // Parse builtins from frontmatter (e.g. "builtins: read_file, write_file, bash")
+    const enabledBuiltins = this.frontmatter.builtins
+      ?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const builtinTools = createBuiltinTools(this.agentDir, enabledBuiltins);
     const moduleTools = this.modules.flatMap((m) => {
       try {
         return m.tools();
@@ -96,6 +106,23 @@ export class AgentRuntime {
         return [];
       }
     });
+
+    if (builtinTools.length > 0) {
+      console.log(`Builtin tools: ${builtinTools.map((t) => t.name).join(", ")}`);
+    }
+
+    // Build inline tools from .mdx <Tool> definitions
+    const toolCtx: ToolContext = {
+      agentDir: this.agentDir,
+      cwd: this.agentDir,
+      log: (message: string) => this.log(message),
+    };
+    const inlineTools = buildToolsFromDefs(this.inlineToolDefs, toolCtx);
+    if (inlineTools.length > 0) {
+      console.log(`Inline tools: ${inlineTools.map((t) => t.name).join(", ")}`);
+    }
+
+    this.allTools = [...builtinTools, ...inlineTools, ...moduleTools];
 
     // 8. Create Agent instance
     const model = getModel("azure-openai-responses", "gpt-5.2");
@@ -118,7 +145,7 @@ export class AgentRuntime {
     });
     this.agent.setSystemPrompt(systemPrompt);
     this.agent.setModel(model);
-    this.agent.setTools([...builtinTools, ...moduleTools]);
+    this.agent.setTools(this.allTools);
 
     this.lastModelInfo = {
       id: model.id,
@@ -130,12 +157,14 @@ export class AgentRuntime {
   }
 
   /**
-   * Load agent.md and parse identity
+   * Load agent.mdx and parse identity + inline tool definitions
    */
   private async loadAgentIdentity(): Promise<void> {
-    const content = await Bun.file(this.agentMdPath).text();
-    const markdown = parseMarkdown(content);
-    this.identity = parseAgentIdentity(markdown);
+    const content = await Bun.file(this.agentMdxPath).text();
+    const def = parseAgentMdx(content);
+    this.identity = def.identity;
+    this.inlineToolDefs = def.tools;
+    this.frontmatter = def.frontmatter;
 
     console.log(`Agent: ${this.identity.name}`);
     console.log(`Purpose: ${this.identity.purpose}`);
@@ -166,7 +195,7 @@ export class AgentRuntime {
    */
   async *processTaskStream(
     taskDescription: string,
-    history?: Array<{ role: "user" | "assistant"; content: string; timestamp?: string }>,
+    history?: AgentMessage[],
   ): AsyncGenerator<AgentEvent> {
     if (!this.agent) {
       throw new Error("Agent not initialized — call initialize() first");
@@ -185,9 +214,8 @@ export class AgentRuntime {
       contextWindow: model.contextWindow,
     };
 
-    // Rebuild message history
-    const priorMessages = this.buildHistoryMessages(history, model);
-    this.agent.replaceMessages(priorMessages);
+    // Replay full message history (includes tool calls and results)
+    this.agent.replaceMessages(history ?? []);
 
     // Expand skill commands
     const expandedTask = await this.expandSkillCommand(taskDescription);
@@ -334,13 +362,13 @@ export class AgentRuntime {
       }
     }
 
-    // Tool hints
+    // Tool hints — dynamically generated from all registered tools
     prompt += `## Tools\n\n`;
     prompt += `You have access to the following tools:\n`;
-    prompt += `- **bash**: Run shell commands. Use for fetching data (curl), running scripts, installing packages, etc.\n`;
-    prompt += `- **read_file**: Read file contents. Supports offset/limit for large files.\n`;
-    prompt += `- **write_file**: Write content to a file. Creates parent directories automatically.\n\n`;
-    prompt += `Use tools to accomplish tasks. You can call multiple tools in sequence.\n`;
+    for (const tool of this.allTools) {
+      prompt += `- **${tool.name}**: ${tool.description}\n`;
+    }
+    prompt += `\nUse tools to accomplish tasks. You can call multiple tools in sequence.\n`;
 
     return prompt;
   }
@@ -369,48 +397,6 @@ export class AgentRuntime {
     return args ? `${skillBlock}\n\n${args}` : skillBlock;
   }
 
-  private buildHistoryMessages(
-    history: Array<{ role: "user" | "assistant"; content: string; timestamp?: string }> | undefined,
-    model: Model<any>,
-  ): Message[] {
-    if (!history || history.length === 0) return [];
-
-    const messages: Message[] = [];
-    for (const entry of history) {
-      if (!entry.content || !entry.content.trim()) continue;
-      const timestamp = entry.timestamp ? Date.parse(entry.timestamp) : Date.now();
-      if (entry.role === "user") {
-        messages.push({
-          role: "user",
-          content: entry.content,
-          timestamp: Number.isNaN(timestamp) ? Date.now() : timestamp,
-        });
-      } else {
-        const content: TextContent[] = [{ type: "text", text: entry.content }];
-        const assistantMessage: AssistantMessage = {
-          role: "assistant",
-          content,
-          api: model.api,
-          provider: model.provider,
-          model: model.id,
-          usage: {
-            input: 0,
-            output: 0,
-            cacheRead: 0,
-            cacheWrite: 0,
-            totalTokens: 0,
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-          },
-          stopReason: "stop",
-          timestamp: Number.isNaN(timestamp) ? Date.now() : timestamp,
-        };
-        messages.push(assistantMessage);
-      }
-    }
-
-    return messages;
-  }
-
   private async loadState(): Promise<void> {
     const statePath = `${this.stateDir}/agent-state.json`;
     const stateFile = Bun.file(statePath);
@@ -423,11 +409,17 @@ export class AgentRuntime {
   }
 
   private async saveState(): Promise<void> {
+    if (!existsSync(this.stateDir)) {
+      await mkdir(this.stateDir, { recursive: true });
+    }
     const statePath = `${this.stateDir}/agent-state.json`;
     await Bun.write(statePath, JSON.stringify(this.state, null, 2));
   }
 
   private async log(message: string): Promise<void> {
+    if (!existsSync(this.logsDir)) {
+      await mkdir(this.logsDir, { recursive: true });
+    }
     const timestamp = new Date().toISOString();
     const date = timestamp.split("T")[0];
     const logPath = `${this.logsDir}/${date}.log`;
@@ -457,6 +449,14 @@ export class AgentRuntime {
 
   getLastModelInfo(): { id: string; provider: string; contextWindow: number } | undefined {
     return this.lastModelInfo;
+  }
+
+  /**
+   * Get the full message history from the agent's internal state.
+   * Includes user messages, assistant messages (with tool calls), and tool results.
+   */
+  getMessages(): AgentMessage[] {
+    return this.agent?.state.messages ?? [];
   }
 
   /**

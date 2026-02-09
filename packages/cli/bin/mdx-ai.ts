@@ -1,5 +1,3 @@
-#!/usr/bin/env bun
-
 import { Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { homedir } from "os";
@@ -17,9 +15,9 @@ const c = {
   red: "\x1b[31m",
 };
 
-// ─── Config (~/.mdx-ai/config.json) ─────────────────────────────────────────
+// ─── Config (~/.amps/config.json) ───────────────────────────────────────────
 
-const CONFIG_DIR = resolve(homedir(), ".mdx-ai");
+const CONFIG_DIR = resolve(homedir(), ".amps");
 const CONFIG_PATH = resolve(CONFIG_DIR, "config.json");
 
 interface Config {
@@ -111,7 +109,7 @@ function checkProvider(p: ProviderDef): { configured: boolean; missing: string[]
 }
 
 function getDefaultModel(): string {
-  if (process.env.MDX_AI_MODEL) return process.env.MDX_AI_MODEL;
+  if (process.env.AMPS_MODEL) return process.env.AMPS_MODEL;
   const config = readConfig();
   if (config.defaultModel) return config.defaultModel;
   return FALLBACK_MODEL;
@@ -131,7 +129,7 @@ function printProviders() {
     else unconfigured.push(p);
   }
 
-  process.stdout.write(`\n${c.cyan}mdx-ai providers${c.reset}\n\n`);
+  process.stdout.write(`\n${c.cyan}amps providers${c.reset}\n\n`);
 
   if (configured.length === 0) {
     process.stdout.write(`  ${c.yellow}No providers configured.${c.reset}\n`);
@@ -160,14 +158,14 @@ function printProviders() {
 
   process.stdout.write(`  ${c.dim}─────────────────────────────────────────${c.reset}\n`);
   process.stdout.write(`  ${c.dim}Default model:${c.reset} ${c.bold}${defaultModel}${c.reset}`);
-  if (process.env.MDX_AI_MODEL) {
-    process.stdout.write(`  ${c.dim}(from MDX_AI_MODEL)${c.reset}`);
+  if (process.env.AMPS_MODEL) {
+    process.stdout.write(`  ${c.dim}(from AMPS_MODEL)${c.reset}`);
   } else if (config.defaultModel) {
-    process.stdout.write(`  ${c.dim}(from ~/.mdx-ai/config.json)${c.reset}`);
+    process.stdout.write(`  ${c.dim}(from ~/.amps/config.json)${c.reset}`);
   }
   process.stdout.write(`\n`);
   process.stdout.write(
-    `  ${c.dim}Change with:${c.reset} mdx-ai providers default ${c.dim}<provider/model>${c.reset}\n\n`,
+    `  ${c.dim}Change with:${c.reset} amps providers default ${c.dim}<provider/model>${c.reset}\n\n`,
   );
 }
 
@@ -196,7 +194,7 @@ function setDefaultModel(model: string) {
   writeConfig(config);
 
   process.stdout.write(`${c.green}✓${c.reset} Default model set to ${c.bold}${model}${c.reset}\n`);
-  process.stdout.write(`${c.dim}  Saved to ~/.mdx-ai/config.json${c.reset}\n`);
+  process.stdout.write(`${c.dim}  Saved to ~/.amps/config.json${c.reset}\n`);
 }
 
 // ─── Spawn helper ────────────────────────────────────────────────────────────
@@ -213,9 +211,9 @@ async function spawn(binPath: string, args: string[]): Promise<never> {
 // ─── CLI ─────────────────────────────────────────────────────────────────────
 
 const program = new Command()
-  .name("mdx-ai")
-  .description("Scriptable AI tools that run locally")
-  .version("0.1.0")
+  .name("amps")
+  .description("Agent MetaProgramming System — scriptable AI agents in Markdown")
+  .version("0.1.0-alpha.1")
   .enablePositionalOptions();
 
 // workflow — pass-through to sub-package
@@ -228,8 +226,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("workflow") + 1);
-    const binPath = new URL("../packages/workflow/bin/mdx-ai-workflow.ts", import.meta.url)
-      .pathname;
+    const binPath = new URL("../../workflow/bin/mdx-ai-workflow.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 
@@ -243,7 +240,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("agent") + 1);
-    const binPath = new URL("../packages/agent/bin/mdx-ai-agent.ts", import.meta.url).pathname;
+    const binPath = new URL("../../agent/bin/mdx-ai-agent.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 

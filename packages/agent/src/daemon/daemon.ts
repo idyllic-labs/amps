@@ -1,7 +1,7 @@
 import { discoverAgents } from "./agent-discovery.ts";
 import { MultiHeartbeatManager } from "./multi-heartbeat.ts";
 import { logger } from "../shared/logger.ts";
-import { getMdxAiHome } from "../shared/config.ts";
+import { getAmpsHome } from "../shared/config.ts";
 
 /**
  * Main daemon process - orchestrates all agents' heartbeats
@@ -18,15 +18,15 @@ export class Daemon {
    * Start the daemon
    */
   async start(): Promise<void> {
-    logger.info("mdx-ai agent daemon starting...");
-    logger.info(`Home directory: ${getMdxAiHome()}`);
+    logger.info("amps agent daemon starting...");
+    logger.info(`Home directory: ${getAmpsHome()}`);
 
     // Discover all agents
     const agents = await discoverAgents();
     logger.info(`Found ${agents.length} agent(s)`);
 
     if (agents.length === 0) {
-      logger.warn("No agents found. Create one with 'mdx-ai agent new'");
+      logger.warn("No agents found. Create one with 'amps agent new'");
       logger.info("Daemon will stay running and check for agents periodically...");
     }
 

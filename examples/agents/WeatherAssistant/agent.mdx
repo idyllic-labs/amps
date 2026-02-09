@@ -26,3 +26,18 @@ Provide weather information and time zone data for any location. Help users plan
 ## Personality
 
 Helpful and concise. Provides weather info quickly with relevant context. Suggests practical actions based on conditions.
+
+<Tool name="get_weather" description="Get current weather for a city using wttr.in">
+  <Param name="city" type="string" description="City name (e.g. 'London', 'New York')" />
+
+```typescript
+async function execute(params: { city: string }, ctx: any) {
+	const encoded = encodeURIComponent(params.city)
+	const resp = await fetch(`https://wttr.in/${encoded}?format=3`)
+	if (!resp.ok) {
+		return `Failed to fetch weather for ${params.city}: ${resp.statusText}`
+	}
+	return await resp.text()
+}
+```
+</Tool>

@@ -51,6 +51,12 @@ export interface ParsedMarkdown {
   rawContent: string;
 }
 
+export interface ToolContext {
+  agentDir: string;
+  cwd: string;
+  log: (message: string) => Promise<void>;
+}
+
 export interface AgentState {
   currentTask?: string;
   lastWake?: Date;

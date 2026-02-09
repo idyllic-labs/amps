@@ -10,9 +10,9 @@ import { SessionManager } from "../src/tui/session-manager.ts";
 const program = new Command();
 
 program
-  .name("mdx-ai-agent")
+  .name("amps-agent")
   .description("Markdown-first agent runtime")
-  .argument("<agent-path>", "Path to agent directory (must contain agent.md)")
+  .argument("<agent-path>", "Path to agent directory (must contain agent.mdx)")
   .option("-p, --prompt <text>", "Run non-interactively with the given prompt")
   .option("-s, --session <id>", "Session ID for history", "main")
   .action(async (agentPath: string, opts: { prompt?: string; session: string }) => {
@@ -23,12 +23,11 @@ program
       process.exit(1);
     }
 
-    // Check for agent.md (lowercase)
-    const agentMdPath = resolve(fullPath, "agent.md");
-    if (!existsSync(agentMdPath)) {
-      console.error(`\x1b[31mError:\x1b[0m agent.md not found in: ${fullPath}`);
+    const agentMdxPath = resolve(fullPath, "agent.mdx");
+    if (!existsSync(agentMdxPath)) {
+      console.error(`\x1b[31mError:\x1b[0m agent.mdx not found in: ${fullPath}`);
       console.error(
-        `\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with agent.md`,
+        `\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with agent.mdx`,
       );
       process.exit(1);
     }
@@ -59,18 +58,8 @@ async function runNonInteractive(
 ): Promise<void> {
   const sessionManager = new SessionManager(runtime.getAgentPath(), sessionId);
 
-  // Load history
-  const history = (await sessionManager.loadHistory()).filter(
-    (m): m is typeof m & { role: "user" | "assistant" } =>
-      m.role === "user" || m.role === "assistant",
-  );
-
-  // Save user message
-  await sessionManager.saveMessage({
-    role: "user",
-    content: prompt,
-    timestamp: new Date().toISOString(),
-  });
+  // Load full message history
+  const history = await sessionManager.loadHistory();
 
   let fullText = "";
 
@@ -115,14 +104,8 @@ async function runNonInteractive(
       process.stdout.write("\n");
     }
 
-    // Save assistant response
-    if (fullText.trim()) {
-      await sessionManager.saveMessage({
-        role: "assistant",
-        content: fullText,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    // Save full message history (includes tool calls and results)
+    await sessionManager.saveMessages(runtime.getMessages());
 
     runtime.stop();
     process.exit(0);
