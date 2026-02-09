@@ -13,7 +13,7 @@ import { AgentRuntime } from "../src/runtime/agent-runtime.ts";
 let agentDir: string;
 
 beforeAll(async () => {
-  agentDir = mkdtempSync(join(tmpdir(), "mdx-ai-e2e-"));
+  agentDir = mkdtempSync(join(tmpdir(), "amps-e2e-"));
 
   // Write agent.mdx with inline tools
   await Bun.write(
@@ -132,7 +132,7 @@ describe("AgentRuntime end-to-end", () => {
   });
 
   test("creates state and log directories on use", async () => {
-    const freshDir = mkdtempSync(join(tmpdir(), "mdx-ai-dirs-"));
+    const freshDir = mkdtempSync(join(tmpdir(), "amps-dirs-"));
     await Bun.write(
       join(freshDir, "agent.mdx"),
       `# Agent: DirTest\n\n## Purpose\nTest directory creation.`,
@@ -152,7 +152,7 @@ describe("AgentRuntime end-to-end", () => {
   });
 
   test("parses agent.mdx without frontmatter", async () => {
-    const noFmDir = mkdtempSync(join(tmpdir(), "mdx-ai-nofm-"));
+    const noFmDir = mkdtempSync(join(tmpdir(), "amps-nofm-"));
     await Bun.write(
       join(noFmDir, "agent.mdx"),
       `# Agent: NoFrontmatter\n\n## Purpose\nWorks without frontmatter.`,
@@ -169,7 +169,7 @@ describe("AgentRuntime end-to-end", () => {
   });
 
   test("handles agent.mdx with tools but no skills or heartbeat", async () => {
-    const minimalDir = mkdtempSync(join(tmpdir(), "mdx-ai-minimal-"));
+    const minimalDir = mkdtempSync(join(tmpdir(), "amps-minimal-"));
     await Bun.write(
       join(minimalDir, "agent.mdx"),
       `# Agent: Minimal

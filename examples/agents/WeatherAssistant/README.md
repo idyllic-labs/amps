@@ -1,6 +1,6 @@
 # WeatherAssistant
 
-A working example mdx-ai agent that provides weather and timezone information.
+A working example amps agent that provides weather and timezone information.
 
 ## Skills
 

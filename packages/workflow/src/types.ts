@@ -1,5 +1,5 @@
 /**
- * mdx-ai/workflow type definitions
+ * amps/workflow type definitions
  * All shared types for the workflow parser, executor, and CLI
  */
 

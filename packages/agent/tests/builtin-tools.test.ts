@@ -8,7 +8,7 @@ let tempDir: string;
 let tools: ReturnType<typeof createBuiltinTools>;
 
 beforeAll(() => {
-  tempDir = mkdtempSync(join(tmpdir(), "mdx-ai-test-"));
+  tempDir = mkdtempSync(join(tmpdir(), "amps-test-"));
   tools = createBuiltinTools(tempDir, ["bash", "read_file", "write_file"]);
 });
 

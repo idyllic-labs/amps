@@ -1,2 +1,2 @@
 #!/usr/bin/env bun
-import "../packages/cli/bin/mdx-ai.ts";
+import "../packages/cli/bin/amps.ts";

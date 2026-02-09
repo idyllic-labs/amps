@@ -1,4 +1,4 @@
-# @mdx-ai/agent Specification
+# @amps/agent Specification
 
 ## Overview
 
@@ -267,13 +267,13 @@ Default session ID is `"main"`. Use `--session <id>` for named sessions.
 
 ```bash
 # Interactive TUI mode
-mdx-ai agent <agent-dir>
+amps agent <agent-dir>
 
 # Non-interactive (single prompt, exits)
-mdx-ai agent <agent-dir> --prompt "What time is it?"
+amps agent <agent-dir> --prompt "What time is it?"
 
 # Named session
-mdx-ai agent <agent-dir> --session work
+amps agent <agent-dir> --session work
 ```
 
 ### TUI Commands

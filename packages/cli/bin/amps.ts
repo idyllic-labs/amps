@@ -213,7 +213,7 @@ async function spawn(binPath: string, args: string[]): Promise<never> {
 const program = new Command()
   .name("amps")
   .description("Agent MetaProgramming System — scriptable AI agents in Markdown")
-  .version("0.1.0-alpha.1")
+  .version("0.1.0-alpha.2")
   .enablePositionalOptions();
 
 // workflow — pass-through to sub-package
@@ -226,7 +226,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("workflow") + 1);
-    const binPath = new URL("../../workflow/bin/mdx-ai-workflow.ts", import.meta.url).pathname;
+    const binPath = new URL("../../workflow/bin/amps-workflow.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 
@@ -240,7 +240,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("agent") + 1);
-    const binPath = new URL("../../agent/bin/mdx-ai-agent.ts", import.meta.url).pathname;
+    const binPath = new URL("../../agent/bin/amps-agent.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 

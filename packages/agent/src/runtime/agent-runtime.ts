@@ -18,7 +18,7 @@ import { getModel, type Message } from "@mariozechner/pi-ai";
 const MAX_TURNS = 50;
 
 /**
- * Main mdx-ai/agent runtime
+ * Main amps/agent runtime
  * Orchestrates markdown-based agent configuration with pi-agent-core Agent loop
  */
 export class AgentRuntime {

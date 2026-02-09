@@ -28,16 +28,16 @@ bun run amps             # Run the CLI
 
 ```
 bin/amps.js                            # CLI entry point (thin wrapper)
-packages/cli/bin/mdx-ai.ts             # CLI dispatcher (commander)
+packages/cli/bin/amps.ts               # CLI dispatcher (commander)
 packages/workflow/                      # workflow — parser, executor, TUI
-  bin/mdx-ai-workflow.ts                # Workflow sub-CLI
+  bin/amps-workflow.ts                  # Workflow sub-CLI
   src/types.ts                          # All shared types
   src/parser.ts                         # Regex-based MDX parser
   src/executor.ts                       # Execution engine
   src/expressions.ts                    # Expression evaluator
   src/tui/                              # Workflow TUI
 packages/agent/                         # agent — persistent agent runtime
-  bin/mdx-ai-agent.ts                   # Agent sub-CLI
+  bin/amps-agent.ts                     # Agent sub-CLI
   src/runtime/                          # Agent runtime, skill loader
   src/tui/                              # Agent TUI
 examples/workflows/                     # Example .mdx workflows

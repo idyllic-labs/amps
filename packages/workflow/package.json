@@ -1,8 +1,8 @@
 {
-  "name": "@mdx-ai/workflow",
+  "name": "@amps/workflow",
   "version": "0.1.0",
   "bin": {
-    "mdx-ai-workflow": "./bin/mdx-ai-workflow.ts"
+    "amps-workflow": "./bin/amps-workflow.ts"
   },
   "files": [
     "src/",
@@ -12,7 +12,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "bun run bin/mdx-ai-workflow.ts"
+    "dev": "bun run bin/amps-workflow.ts"
   },
   "dependencies": {
     "@mariozechner/pi-ai": "0.51.2",

@@ -118,7 +118,7 @@ Renamed package from `mdx-ai` to `@idyllic-labs/amps` (Agent MetaProgramming Sys
 
 Renamed everything user-facing: CLI command (`amps`), config dir (`~/.amps`), env vars (`AMPS_MODEL`, `AMPS_HOME`), TUI branding, help text, smoke tests. Internal function names updated too (`getMdxAiHome` → `getAmpsHome`). Comments and temp dir prefixes left as-is — not worth the churn.
 
-Restructured the CLI entry point: `bin/amps.js` is a 2-line `.js` wrapper (`#!/usr/bin/env bun` + import) that loads `packages/cli/bin/mdx-ai.ts`. This works around npm stripping `.ts` bin entries while keeping all the actual code in TypeScript.
+Restructured the CLI entry point: `bin/amps.js` is a 2-line `.js` wrapper (`#!/usr/bin/env bun` + import) that loads `packages/cli/bin/amps.ts`. This works around npm stripping `.ts` bin entries while keeping all the actual code in TypeScript.
 
 Created package-level READMEs (`packages/agent/README.md`, `packages/workflow/README.md`) with full docs. Root README is now a slim index — project description, install, package table, example links, dev commands. No specs.
 

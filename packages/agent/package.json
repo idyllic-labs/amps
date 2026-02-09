@@ -1,8 +1,8 @@
 {
-  "name": "@mdx-ai/agent",
+  "name": "@amps/agent",
   "version": "0.1.0",
   "bin": {
-    "mdx-ai-agent": "./bin/mdx-ai-agent.ts"
+    "amps-agent": "./bin/amps-agent.ts"
   },
   "files": [
     "src/",
@@ -13,7 +13,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "bun test",
-    "dev": "bun run bin/mdx-ai-agent.ts"
+    "dev": "bun run bin/amps-agent.ts"
   },
   "dependencies": {
     "@mariozechner/pi-agent-core": "0.51.2",

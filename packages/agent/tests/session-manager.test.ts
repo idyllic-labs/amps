@@ -9,7 +9,7 @@ import type { UserMessage, AssistantMessage, ToolResultMessage } from "@mariozec
 let tempDir: string;
 
 beforeEach(() => {
-  tempDir = mkdtempSync(join(tmpdir(), "mdx-ai-session-"));
+  tempDir = mkdtempSync(join(tmpdir(), "amps-session-"));
 });
 
 afterAll(() => {

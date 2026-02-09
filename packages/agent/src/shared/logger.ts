@@ -1,5 +1,5 @@
 /**
- * Simple logger utility for mdx-ai/agent
+ * Simple logger utility for amps/agent
  */
 
 export enum LogLevel {

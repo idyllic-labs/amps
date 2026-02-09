@@ -25,3 +25,4 @@ external/
 # Dev tooling configs
 packages/*/tsconfig.json
 packages/*/package.json
+*.tgz

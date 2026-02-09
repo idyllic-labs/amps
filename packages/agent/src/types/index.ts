@@ -1,4 +1,4 @@
-// Core types for mdx-ai/agent
+// Core types for amps/agent
 
 // Re-export agent-core types for consumers
 export type { AgentTool, AgentEvent, AgentToolResult } from "@mariozechner/pi-agent-core";

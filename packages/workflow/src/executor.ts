@@ -1,5 +1,5 @@
 /**
- * mdx-ai/workflow Executor
+ * amps/workflow Executor
  *
  * Executes parsed WorkflowDefinition objects with context accumulation.
  * Each <Generation> sees ALL accumulated context above it.

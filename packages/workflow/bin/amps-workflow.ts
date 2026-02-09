@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * mdx-ai workflow CLI
+ * amps workflow CLI
  * Execute markdown workflows as agent programs
  */
 
