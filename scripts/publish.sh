@@ -1,36 +1,49 @@
 #!/bin/bash
-# Publish @idyllic-labs/amps to npm.
+# Release @idyllic-labs/amps — bumps version, tags, and pushes.
+# The GitHub Action handles npm publish.
 #
 # Usage:
-#   ./scripts/publish.sh           # publish current version
-#   ./scripts/publish.sh --dry-run # preview without publishing
+#   ./scripts/publish.sh
 #
 set -e
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
-VERSION=$(node -p "require('./package.json').version")
-echo "Publishing @idyllic-labs/amps@$VERSION"
-
-# Pre-flight checks
+CURRENT=$(node -p "require('./package.json').version")
+echo "Current version: $CURRENT"
 echo ""
-echo "Running checks..."
-bun run test 2>&1 | tail -1
-bun run lint 2>&1 | tail -1
-echo "Checks passed."
 
-# Build and publish
-echo ""
-if [ "$1" = "--dry-run" ]; then
-  echo "Dry run — packing only..."
-  npm pack
-  echo ""
-  echo "Would publish: @idyllic-labs/amps@$VERSION"
-  rm -f idyllic-labs-amps-*.tgz
-else
-  npm publish --tag alpha --access public
-  echo ""
-  echo "Published @idyllic-labs/amps@$VERSION"
-  echo "Install: bun install -g @idyllic-labs/amps@$VERSION"
+read -p "New version: " VERSION
+if [ -z "$VERSION" ]; then
+	echo "No version entered, aborting."
+	exit 1
 fi
+
+echo ""
+echo "This will:"
+echo "  1. Set version to $VERSION in package.json"
+echo "  2. Commit, tag v$VERSION, and push to origin"
+echo "  3. GitHub Action will publish to npm"
+echo ""
+read -p "Proceed? [y/N] " CONFIRM
+if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+	echo "Aborted."
+	exit 0
+fi
+
+# Update version in root package.json
+node -e "
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+pkg.version = '$VERSION';
+fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+"
+
+git add package.json
+git commit -m "v$VERSION"
+git tag "v$VERSION"
+git push origin main "v$VERSION"
+
+echo ""
+echo "Pushed v$VERSION — GitHub Action will publish to npm."

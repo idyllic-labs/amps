@@ -1,6 +1,5 @@
 {
   "name": "@amps/workflow",
-  "version": "0.1.0",
   "bin": {
     "amps-workflow": "./bin/amps-workflow.ts"
   },

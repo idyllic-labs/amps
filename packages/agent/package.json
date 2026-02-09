@@ -1,6 +1,5 @@
 {
   "name": "@amps/agent",
-  "version": "0.1.0",
   "bin": {
     "amps-agent": "./bin/amps-agent.ts"
   },
