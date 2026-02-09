@@ -213,7 +213,7 @@ async function spawn(binPath: string, args: string[]): Promise<never> {
 const program = new Command()
   .name("amps")
   .description("Agent MetaProgramming System — scriptable AI agents in Markdown")
-  .version("0.1.0-alpha.2")
+  .version("0.1.0-alpha.4")
   .enablePositionalOptions();
 
 // workflow — pass-through to sub-package

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>amps agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              bg: { DEFAULT: "#0a0a0a", surface: "#141414", hover: "#1a1a1a" },
+              border: { DEFAULT: "#262626", light: "#333" },
+              accent: { DEFAULT: "#3b82f6", dim: "#1d4ed8" },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="/assistant-ui.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="bg-bg text-gray-200 h-screen overflow-hidden">
+    <div id="root"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

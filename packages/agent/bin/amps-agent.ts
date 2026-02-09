@@ -14,40 +14,48 @@ program
   .description("Markdown-first agent runtime")
   .argument("<agent-path>", "Path to agent directory (must contain agent.mdx)")
   .option("-p, --prompt <text>", "Run non-interactively with the given prompt")
+  .option("-w, --web [port]", "Start web UI (default port: 8080, auto-increments if busy)")
   .option("-s, --session <id>", "Session ID for history", "main")
-  .action(async (agentPath: string, opts: { prompt?: string; session: string }) => {
-    const fullPath = resolve(agentPath);
+  .action(
+    async (agentPath: string, opts: { prompt?: string; web?: string | true; session: string }) => {
+      const fullPath = resolve(agentPath);
 
-    if (!existsSync(fullPath)) {
-      console.error(`\x1b[31mError:\x1b[0m Agent directory not found: ${fullPath}`);
-      process.exit(1);
-    }
+      if (!existsSync(fullPath)) {
+        console.error(`\x1b[31mError:\x1b[0m Agent directory not found: ${fullPath}`);
+        process.exit(1);
+      }
 
-    const agentMdxPath = resolve(fullPath, "agent.mdx");
-    if (!existsSync(agentMdxPath)) {
-      console.error(`\x1b[31mError:\x1b[0m agent.mdx not found in: ${fullPath}`);
-      console.error(
-        `\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with agent.mdx`,
-      );
-      process.exit(1);
-    }
+      const agentMdxPath = resolve(fullPath, "agent.mdx");
+      if (!existsSync(agentMdxPath)) {
+        console.error(`\x1b[31mError:\x1b[0m agent.mdx not found in: ${fullPath}`);
+        console.error(
+          `\x1b[33mTip:\x1b[0m Make sure you're pointing to an agent directory with agent.mdx`,
+        );
+        process.exit(1);
+      }
 
-    const agentName = agentPath.split("/").pop() || "Agent";
+      const agentName = agentPath.split("/").pop() || "Agent";
 
-    // Initialize runtime
-    const runtime = new AgentRuntime(fullPath);
-    await runtime.initialize();
+      // Initialize runtime
+      const runtime = new AgentRuntime(fullPath);
+      await runtime.initialize();
 
-    if (opts.prompt) {
-      // Non-interactive mode
-      await runNonInteractive(runtime, opts.prompt, opts.session);
-    } else {
-      // TUI mode
-      console.log(`\x1b[36mStarting ${agentName}...\x1b[0m\n`);
-      const tui = new AgentTUI(runtime, agentName, opts.session);
-      await tui.start();
-    }
-  });
+      if (opts.web !== undefined) {
+        // Web UI mode
+        const port = typeof opts.web === "string" ? parseInt(opts.web) : 8080;
+        const { startWebServer } = await import("../src/web/web-server.ts");
+        await startWebServer(runtime, { port, sessionId: opts.session });
+      } else if (opts.prompt) {
+        // Non-interactive mode
+        await runNonInteractive(runtime, opts.prompt, opts.session);
+      } else {
+        // TUI mode
+        console.log(`\x1b[36mStarting ${agentName}...\x1b[0m\n`);
+        const tui = new AgentTUI(runtime, agentName, opts.session);
+        await tui.start();
+      }
+    },
+  );
 
 program.parse();
 

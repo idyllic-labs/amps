@@ -13,6 +13,7 @@ import {
   type AgentMessage,
   type AgentTool,
 } from "@mariozechner/pi-agent-core";
+import type { ImageContent } from "@mariozechner/pi-ai";
 import { getModel, type Message } from "@mariozechner/pi-ai";
 
 const MAX_TURNS = 50;
@@ -196,6 +197,7 @@ export class AgentRuntime {
   async *processTaskStream(
     taskDescription: string,
     history?: AgentMessage[],
+    images?: ImageContent[],
   ): AsyncGenerator<AgentEvent> {
     if (!this.agent) {
       throw new Error("Agent not initialized — call initialize() first");
@@ -237,7 +239,10 @@ export class AgentRuntime {
     });
 
     // Fire the prompt (don't await — we yield events as they arrive)
-    const promptPromise = this.agent.prompt(expandedTask);
+    const promptPromise =
+      images && images.length > 0
+        ? this.agent.prompt(expandedTask, images)
+        : this.agent.prompt(expandedTask);
 
     // Track turns for safety
     let turnCount = 0;

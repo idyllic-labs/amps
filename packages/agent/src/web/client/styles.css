@@ -1,0 +1,76 @@
+/* amps web UI — dark theme overrides for assistant-ui */
+
+/* ── Dark theme variable overrides ── */
+.dark {
+  --aui-background: 0 0% 4%;
+  --aui-foreground: 0 0% 87%;
+
+  --aui-card: 0 0% 8%;
+  --aui-card-foreground: 0 0% 87%;
+
+  --aui-popover: 0 0% 8%;
+  --aui-popover-foreground: 0 0% 87%;
+
+  --aui-primary: 0 0% 87%;
+  --aui-primary-foreground: 0 0% 8%;
+
+  --aui-secondary: 0 0% 10%;
+  --aui-secondary-foreground: 0 0% 87%;
+
+  --aui-muted: 0 0% 10%;
+  --aui-muted-foreground: 0 0% 45%;
+
+  --aui-accent: 0 0% 10%;
+  --aui-accent-foreground: 0 0% 87%;
+
+  --aui-border: 0 0% 15%;
+  --aui-input: 0 0% 15%;
+  --aui-ring: 217 91% 60%;
+
+  --aui-radius: 0.5rem;
+  --aui-thread-max-width: 48rem;
+}
+
+/* ── Scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+/* ── Tool block ── */
+.tool-block summary {
+  cursor: pointer;
+  user-select: none;
+}
+.tool-block summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ── Pulse animation for streaming indicator ── */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.streaming-dot {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* ── Thread styling adjustments ── */
+[data-aui-thread] {
+  height: 100%;
+}

@@ -1,5 +1,43 @@
 # Worklog
 
+## 2026-02-09 - evening
+
+Replaced the custom hand-built React chat UI (~550 lines) with `@assistant-ui/react` +
+`@assistant-ui/react-ui`. The server-side WebSocket architecture is unchanged — the
+adapter pattern (`ChatModelAdapter`) bridges our WS events into assistant-ui's async
+generator streaming model.
+
+Key pieces:
+- **WsEventBridge** — queue+promise pattern converting push-based WS events into
+  pull-based async iteration for the ChatModelAdapter
+- **ChatModelAdapter** — yields `{ content: [...] }` on each WS event; accumulates
+  text parts and tool-call parts; yields final status on done/error
+- **ToolFallback** — `makeAssistantToolUI({ toolName: "*" })` wildcard that renders
+  collapsible tool blocks with status dot, args preview, expandable details
+- **ThreadSidebar** — custom component using existing WS session commands
+
+Added `toolCallId` (as `id`) to WS `tool_start`/`tool_end` events and history entries
+so assistant-ui can match tool calls to results.
+
+Follow-up fixes after initial swap:
+- CSS path resolution: `require.resolve("@assistant-ui/react-ui/package.json")` instead
+  of relative `../../../node_modules` (hoisted monorepo node_modules)
+- History loading: `runtime.thread.reset(threadMessageLikes)` on WS `history` event —
+  the initial approach of just bumping adapterKey left the thread empty
+- Sending: moved WS prompt send inside `adapter.run()` (extract last user message from
+  `options.messages`). The original `thread.append` monkey-patch was fragile and broke
+- Markdown: wired `makeMarkdownText()` into `Thread.assistantMessage.components.Text`
+- **Multimodal images**: `SimpleImageAttachmentAdapter` for drag/paste,
+  extract from `message.attachments[].content` (not `message.content`), send base64
+  over WS, pass as `ImageContent[]` through `processTaskStream` → `agent.prompt(text, images)`.
+  Images persist in session history and reload on refresh.
+
+Gotchas: assistant-ui's `ChatModelAdapter.run()` must be an async generator returning
+`void` (yield final result, then bare `return`). The `makeAssistantToolUI` render props
+spread `ToolCallMessagePart` + `MessagePartState` flat — `toolName`, `args`, `result`,
+`status` are all top-level, no `part` wrapper. `SimpleImageAttachmentAdapter` puts
+image data in `attachment.content`, not the message's `content` array directly.
+
 ## 2026-02-08 - 9:30 PM
 
 Implemented inline `<Tool>` components for agent `.mdx` files. The big idea: agents should be self-contained single files where tools are defined inline with TypeScript, not hardcoded in source. The LLM sees tool name + schema, never the code.
@@ -123,3 +161,21 @@ Restructured the CLI entry point: `bin/amps.js` is a 2-line `.js` wrapper (`#!/u
 Created package-level READMEs (`packages/agent/README.md`, `packages/workflow/README.md`) with full docs. Root README is now a slim index — project description, install, package table, example links, dev commands. No specs.
 
 Published `@idyllic-labs/amps@0.1.0-alpha.1` to npm. Docker smoke test passes with the new name. All 72 unit tests pass.
+
+## 2026-02-09 - Evening
+
+Implemented `--web` flag for the agent CLI — a third interaction mode alongside TUI and `--prompt`. Starts a local web server with a React chat UI in the browser while keeping all agent runtime (tools, filesystem, bash) server-side.
+
+**Architecture:** `Bun.serve()` with native WebSocket support. Browser sends prompts, server iterates `runtime.processTaskStream()` and translates `AgentEvent` → flat JSON messages (`text_delta`, `tool_start`, `tool_end`, `done`). Client never sees pi-agent-core internals.
+
+**Client:** Single-file React 19 app bundled at server startup via `Bun.build()`. Uses Vercel's `streamdown` for streaming markdown rendering (handles incomplete fences, GFM tables, etc). Tailwind Play CDN for styling — no build toolchain needed. Dark theme matching the TUI aesthetic.
+
+**Key pieces:**
+- `web-server.ts` — HTTP routes (index.html, app.js, styles.css) + WebSocket handler (prompt, history, sessions, clear)
+- `client/app.tsx` — React app with streaming message accumulation via refs (avoids stale closures in WS handler), session picker dropdown, collapsible tool call blocks
+- `SessionManager.listSessions()` — new static method reads session subdirectories for the session picker
+- Port auto-increment (8080→8089) if busy, auto-opens browser on macOS
+
+**Design choice:** Used WebSocket instead of SSE because we may want bidirectional communication later (agent pings, heartbeat). The protocol is simple JSON — no binary framing, no multiplexing.
+
+All checks pass: typecheck, lint (0 warnings), format.

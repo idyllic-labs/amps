@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
 import { ensureDir } from "../shared/config.ts";
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
@@ -19,6 +19,25 @@ export class SessionManager {
     this.sessionId = sessionId;
     this.sessionPath = resolve(agentPath, "sessions", sessionId);
     this.historyPath = resolve(this.sessionPath, "history.json");
+  }
+
+  /**
+   * List all session IDs for an agent
+   */
+  static listSessions(agentPath: string): string[] {
+    const sessionsDir = resolve(agentPath, "sessions");
+    if (!existsSync(sessionsDir)) {
+      return [];
+    }
+    try {
+      const entries = readdirSync(sessionsDir, { withFileTypes: true });
+      return entries
+        .filter((e) => e.isDirectory())
+        .map((e) => e.name)
+        .sort();
+    } catch {
+      return [];
+    }
   }
 
   /**
