@@ -1,6 +1,6 @@
 {
   "name": "@idyllic-labs/amps",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "description": "Scriptable AI agents defined in Markdown. Write an .mdx file, get a tool-calling agent with a TUI.",
   "license": "MIT",
   "repository": {
@@ -19,7 +19,9 @@
   ],
   "packageManager": "bun@1.1.29",
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "bin": {
     "amps": "./bin/amps.js"
   },
