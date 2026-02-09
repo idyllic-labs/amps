@@ -8,6 +8,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -15,13 +18,15 @@ jobs:
         with:
           bun-version: latest
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          registry-url: "https://registry.npmjs.org"
+
       - run: bun install --frozen-lockfile
 
       - run: bun run test
       - run: bun run lint
-
-      - name: Set up npm auth
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish
         run: |
@@ -29,7 +34,12 @@ jobs:
           if [[ "$GITHUB_REF_NAME" == *"-"* ]]; then
             TAG="alpha"
           fi
-          npm publish --tag "$TAG" --access public
+          npm publish --provenance --tag "$TAG" --access public
+
+      - name: Create GitHub Release
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Summary
         run: |
