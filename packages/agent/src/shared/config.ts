@@ -3,33 +3,33 @@ import { homedir } from "os";
 import { resolve } from "path";
 
 /**
- * Get the amps home directory
+ * Get the imps home directory
  * Priority:
- * 1. AMPS_HOME environment variable
- * 2. ./amps-home (for local testing)
- * 3. ~/.amps (default)
+ * 1. IMPS_HOME environment variable
+ * 2. ./imps-home (for local testing)
+ * 3. ~/.imps (default)
  */
-export function getAmpsHome(): string {
+export function getImpsHome(): string {
   // Check environment variable
-  if (process.env.AMPS_HOME) {
-    return resolve(process.env.AMPS_HOME);
+  if (process.env.IMPS_HOME) {
+    return resolve(process.env.IMPS_HOME);
   }
 
   // Check for local testing directory
-  const localHome = resolve(process.cwd(), "amps-home");
+  const localHome = resolve(process.cwd(), "imps-home");
   if (existsSync(localHome)) {
     return localHome;
   }
 
-  // Default to ~/.amps
-  return resolve(homedir(), ".amps");
+  // Default to ~/.imps
+  return resolve(homedir(), ".imps");
 }
 
 /**
  * Get the agents directory path
  */
 export function getAgentsDir(): string {
-  return resolve(getAmpsHome(), "agents");
+  return resolve(getImpsHome(), "agents");
 }
 
 /**
@@ -43,7 +43,7 @@ export function getAgentDir(agentName: string): string {
  * Get the daemon PID file path
  */
 export function getDaemonPidPath(): string {
-  return resolve(getAmpsHome(), "daemon.pid");
+  return resolve(getImpsHome(), "daemon.pid");
 }
 
 /**

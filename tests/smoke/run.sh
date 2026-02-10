@@ -14,12 +14,12 @@ echo "Building tarball..."
 cd "$ROOT_DIR"
 npm pack --quiet
 
-TARBALL=$(ls idyllic-labs-amps-*.tgz | head -1)
+TARBALL=$(ls idyllic-labs-imps-*.tgz | head -1)
 cp "$TARBALL" "$SCRIPT_DIR/"
 
 echo "Building Docker image..."
 cd "$SCRIPT_DIR"
-docker build -t amps-smoke . --quiet
+docker build -t imps-smoke . --quiet
 
 echo "Running smoke tests..."
 DOCKER_ARGS=()
@@ -33,11 +33,11 @@ if [ "$1" = "--with-llm" ]; then
   done
 fi
 
-docker run --rm "${DOCKER_ARGS[@]}" amps-smoke
+docker run --rm "${DOCKER_ARGS[@]}" imps-smoke
 EXIT_CODE=$?
 
 # Cleanup
-rm -f "$SCRIPT_DIR"/idyllic-labs-amps-*.tgz
-rm -f "$ROOT_DIR"/idyllic-labs-amps-*.tgz
+rm -f "$SCRIPT_DIR"/idyllic-labs-imps-*.tgz
+rm -f "$ROOT_DIR"/idyllic-labs-imps-*.tgz
 
 exit $EXIT_CODE

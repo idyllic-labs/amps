@@ -15,9 +15,9 @@ const c = {
   red: "\x1b[31m",
 };
 
-// ─── Config (~/.amps/config.json) ───────────────────────────────────────────
+// ─── Config (~/.imps/config.json) ───────────────────────────────────────────
 
-const CONFIG_DIR = resolve(homedir(), ".amps");
+const CONFIG_DIR = resolve(homedir(), ".imps");
 const CONFIG_PATH = resolve(CONFIG_DIR, "config.json");
 
 interface Config {
@@ -109,7 +109,7 @@ function checkProvider(p: ProviderDef): { configured: boolean; missing: string[]
 }
 
 function getDefaultModel(): string {
-  if (process.env.AMPS_MODEL) return process.env.AMPS_MODEL;
+  if (process.env.IMPS_MODEL) return process.env.IMPS_MODEL;
   const config = readConfig();
   if (config.defaultModel) return config.defaultModel;
   return FALLBACK_MODEL;
@@ -129,7 +129,7 @@ function printProviders() {
     else unconfigured.push(p);
   }
 
-  process.stdout.write(`\n${c.cyan}amps providers${c.reset}\n\n`);
+  process.stdout.write(`\n${c.cyan}imps providers${c.reset}\n\n`);
 
   if (configured.length === 0) {
     process.stdout.write(`  ${c.yellow}No providers configured.${c.reset}\n`);
@@ -158,14 +158,14 @@ function printProviders() {
 
   process.stdout.write(`  ${c.dim}─────────────────────────────────────────${c.reset}\n`);
   process.stdout.write(`  ${c.dim}Default model:${c.reset} ${c.bold}${defaultModel}${c.reset}`);
-  if (process.env.AMPS_MODEL) {
-    process.stdout.write(`  ${c.dim}(from AMPS_MODEL)${c.reset}`);
+  if (process.env.IMPS_MODEL) {
+    process.stdout.write(`  ${c.dim}(from IMPS_MODEL)${c.reset}`);
   } else if (config.defaultModel) {
-    process.stdout.write(`  ${c.dim}(from ~/.amps/config.json)${c.reset}`);
+    process.stdout.write(`  ${c.dim}(from ~/.imps/config.json)${c.reset}`);
   }
   process.stdout.write(`\n`);
   process.stdout.write(
-    `  ${c.dim}Change with:${c.reset} amps providers default ${c.dim}<provider/model>${c.reset}\n\n`,
+    `  ${c.dim}Change with:${c.reset} imps providers default ${c.dim}<provider/model>${c.reset}\n\n`,
   );
 }
 
@@ -194,7 +194,7 @@ function setDefaultModel(model: string) {
   writeConfig(config);
 
   process.stdout.write(`${c.green}✓${c.reset} Default model set to ${c.bold}${model}${c.reset}\n`);
-  process.stdout.write(`${c.dim}  Saved to ~/.amps/config.json${c.reset}\n`);
+  process.stdout.write(`${c.dim}  Saved to ~/.imps/config.json${c.reset}\n`);
 }
 
 // ─── Spawn helper ────────────────────────────────────────────────────────────
@@ -211,8 +211,8 @@ async function spawn(binPath: string, args: string[]): Promise<never> {
 // ─── CLI ─────────────────────────────────────────────────────────────────────
 
 const program = new Command()
-  .name("amps")
-  .description("Agent MetaProgramming System — scriptable AI agents in Markdown")
+  .name("imps")
+  .description("Intelligence MetaProgramming System — scriptable AI agents in Markdown")
   .version("0.1.0-alpha.4")
   .enablePositionalOptions();
 
@@ -226,7 +226,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("workflow") + 1);
-    const binPath = new URL("../../workflow/bin/amps-workflow.ts", import.meta.url).pathname;
+    const binPath = new URL("../../workflow/bin/imps-workflow.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 
@@ -240,7 +240,7 @@ program
   .argument("[args...]")
   .action((_args) => {
     const raw = process.argv.slice(process.argv.indexOf("agent") + 1);
-    const binPath = new URL("../../agent/bin/amps-agent.ts", import.meta.url).pathname;
+    const binPath = new URL("../../agent/bin/imps-agent.ts", import.meta.url).pathname;
     spawn(binPath, raw);
   });
 

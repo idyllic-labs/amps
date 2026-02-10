@@ -1,4 +1,4 @@
-# @amps/agent Specification
+# @imps/agent Specification
 
 ## Overview
 
@@ -267,13 +267,13 @@ Default session ID is `"main"`. Use `--session <id>` for named sessions.
 
 ```bash
 # Interactive TUI mode
-amps agent <agent-dir>
+imps agent <agent-dir>
 
 # Non-interactive (single prompt, exits)
-amps agent <agent-dir> --prompt "What time is it?"
+imps agent <agent-dir> --prompt "What time is it?"
 
 # Named session
-amps agent <agent-dir> --session work
+imps agent <agent-dir> --session work
 ```
 
 ### TUI Commands

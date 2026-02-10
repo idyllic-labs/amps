@@ -1,4 +1,4 @@
-// Core types for amps/agent
+// Core types for imps/agent
 
 // Re-export agent-core types for consumers
 export type { AgentTool, AgentEvent, AgentToolResult } from "@mariozechner/pi-agent-core";

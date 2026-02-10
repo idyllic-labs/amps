@@ -10,7 +10,7 @@ import { SessionManager } from "../src/tui/session-manager.ts";
 const program = new Command();
 
 program
-  .name("amps-agent")
+  .name("imps-agent")
   .description("Markdown-first agent runtime")
   .argument("<agent-path>", "Path to agent directory (must contain agent.mdx)")
   .option("-p, --prompt <text>", "Run non-interactively with the given prompt")

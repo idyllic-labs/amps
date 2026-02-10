@@ -1,13 +1,13 @@
-# amps
+# imps
 
-**Agent MetaProgramming System** — scriptable AI agents defined in Markdown. The document is the program.
+**Intelligence MetaProgramming System** — scriptable AI agents defined in Markdown. The document is the program.
 
 ```bash
 # Workflow: prose becomes prompt, components become actions
-amps workflow run examples/workflows/blog-post.mdx --input topic="distributed systems"
+imps workflow run examples/workflows/blog-post.mdx --input topic="distributed systems"
 
 # Agent: markdown defines identity, inline tools define capabilities
-amps agent examples/agents/WeatherAssistant
+imps agent examples/agents/WeatherAssistant
 ```
 
 From [Idyllic Labs](https://idylliclabs.com), where we research composable primitives for programmable intelligence.
@@ -17,7 +17,7 @@ From [Idyllic Labs](https://idylliclabs.com), where we research composable primi
 **Bun-only.** Runs TypeScript source directly via Bun APIs. Node.js is not supported.
 
 ```bash
-bun install -g @idyllic-labs/amps
+bun install -g @idyllic-labs/imps
 ```
 
 ## Packages

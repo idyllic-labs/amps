@@ -60,7 +60,7 @@ export async function startWebServer(
   }
 
   const url = `http://localhost:${server.port}`;
-  console.log(`\namps web → ${url}\n`);
+  console.log(`\nimps web → ${url}\n`);
 
   // Auto-open browser on macOS
   if (process.platform === "darwin") {

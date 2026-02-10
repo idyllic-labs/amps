@@ -1,5 +1,5 @@
 /**
- * Expression evaluator for amps/workflow.
+ * Expression evaluator for imps/workflow.
  *
  * Evaluates JavaScript expressions found inside {} in MDX files.
  * Uses `new Function()` for evaluation — this is a local CLI tool,

@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * amps workflow CLI
+ * imps workflow CLI
  * Execute markdown workflows as agent programs
  */
 
@@ -13,11 +13,11 @@ import { resolve, dirname } from "path";
 
 // ─── Help Text ──────────────────────────────────────────────────────────────
 
-const HELP = `\x1b[36mamps workflow\x1b[0m — Execute markdown workflows as agent programs
+const HELP = `\x1b[36mimps workflow\x1b[0m — Execute markdown workflows as agent programs
 
 \x1b[33mUsage:\x1b[0m
-  amps workflow run <file.mdx> [options]    Execute a workflow
-  amps workflow check <file.mdx>            Validate a workflow
+  imps workflow run <file.mdx> [options]    Execute a workflow
+  imps workflow check <file.mdx>            Validate a workflow
 
 \x1b[33mOptions:\x1b[0m
   --input key=value    Pass an input value (repeatable)
@@ -35,7 +35,7 @@ const HELP = `\x1b[36mamps workflow\x1b[0m — Execute markdown workflows as age
 \x1b[33mEnvironment:\x1b[0m
   AZURE_OPENAI_API_KEY        Azure OpenAI API key
   AZURE_OPENAI_RESOURCE_NAME  Azure resource name
-  AMPS_MODEL                    Default model (default: azure/gpt-5.2)
+  IMPS_MODEL                    Default model (default: azure/gpt-5.2)
 `;
 
 // ─── Arg Parsing ────────────────────────────────────────────────────────────
@@ -501,7 +501,7 @@ async function main() {
   }
 
   if (!args.file) {
-    error("Missing file argument. Usage: amps workflow <command> <file.mdx>", 1);
+    error("Missing file argument. Usage: imps workflow <command> <file.mdx>", 1);
   }
 
   const filePath = resolve(args.file);

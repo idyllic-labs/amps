@@ -16,7 +16,7 @@ Three distinct concepts:
 
 3. **Environment** (runtime/container) — Manages the lifecycle of instances. Can spawn, stop, list instances. Instances can appear and disappear. The environment is the thing that persists.
 
-### Current `amps agent <dir>` Behavior
+### Current `imps agent <dir>` Behavior
 
 Should stay simple: loads a spec, creates a single implicit instance, runs a chat. This is the "singleton shortcut" — you don't need an environment to just talk to an agent. Equivalent to `new WeatherAssistant()` with a default session.
 
@@ -62,7 +62,7 @@ Spawning: `spawn("WeatherAssistant", { id: "weather-eu-1", config: { region: "eu
 
 The `src/daemon/` directory has:
 - `daemon.ts` — discovers agents, creates one runtime per agent, runs heartbeats, manages shutdown
-- `agent-discovery.ts` — scans `~/.amps/agents/` for agent dirs with `agent.mdx`
+- `agent-discovery.ts` — scans `~/.imps/agents/` for agent dirs with `agent.mdx`
 - `multi-heartbeat.ts` — wraps multiple runtimes
 - `process-manager.ts` — PID file management, start/stop/status
 
@@ -71,6 +71,6 @@ This code is **not integrated into the CLI** yet. It assumes singleton agents. I
 ### Recommended Next Steps
 
 1. Don't touch the daemon code yet — the mental model needs to settle first
-2. Keep `amps agent <dir>` as the simple "one spec, one instance" path
-3. Design the environment concept separately, maybe as `amps env` commands
+2. Keep `imps agent <dir>` as the simple "one spec, one instance" path
+3. Design the environment concept separately, maybe as `imps env` commands
 4. Figure out whether heartbeat belongs to the instance or the environment

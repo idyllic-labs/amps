@@ -1,5 +1,5 @@
 #!/bin/bash
-# Release @idyllic-labs/amps — bumps version, tags, and pushes.
+# Release @idyllic-labs/imps — bumps version, tags, and pushes.
 # The GitHub Action handles npm publish.
 #
 # Usage:

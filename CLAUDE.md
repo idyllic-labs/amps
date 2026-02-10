@@ -1,6 +1,6 @@
-# amps
+# imps
 
-Agent MetaProgramming System. Scriptable AI tools that run locally. Monorepo with three packages.
+Intelligence MetaProgramming System. Scriptable AI tools that run locally. Monorepo with three packages.
 
 ## Stack
 
@@ -21,23 +21,23 @@ bun run typecheck        # Typecheck all packages (via turbo)
 bun run lint             # Lint with oxlint
 bun run format           # Format with oxfmt
 bun run format:check     # Check formatting without writing
-bun run amps             # Run the CLI
+bun run imps             # Run the CLI
 ```
 
 ## Structure
 
 ```
-bin/amps.js                            # CLI entry point (thin wrapper)
-packages/cli/bin/amps.ts               # CLI dispatcher (commander)
+bin/imps.js                            # CLI entry point (thin wrapper)
+packages/cli/bin/imps.ts               # CLI dispatcher (commander)
 packages/workflow/                      # workflow — parser, executor, TUI
-  bin/amps-workflow.ts                  # Workflow sub-CLI
+  bin/imps-workflow.ts                  # Workflow sub-CLI
   src/types.ts                          # All shared types
   src/parser.ts                         # Regex-based MDX parser
   src/executor.ts                       # Execution engine
   src/expressions.ts                    # Expression evaluator
   src/tui/                              # Workflow TUI
 packages/agent/                         # agent — persistent agent runtime
-  bin/amps-agent.ts                     # Agent sub-CLI
+  bin/imps-agent.ts                     # Agent sub-CLI
   src/runtime/                          # Agent runtime, skill loader
   src/tui/                              # Agent TUI
 examples/workflows/                     # Example .mdx workflows
@@ -51,7 +51,7 @@ examples/agents/                        # Example agents
 - No semicolons where avoidable (oxfmt default)
 - Run `bun run lint` and `bun run format:check` before committing
 - Model string format: `provider/model` (e.g. `azure/gpt-5.2`)
-- Config precedence: `AMPS_MODEL` env var > `~/.amps/config.json` > `azure/gpt-5.2`
+- Config precedence: `IMPS_MODEL` env var > `~/.imps/config.json` > `azure/gpt-5.2`
 
 ## Key Design
 

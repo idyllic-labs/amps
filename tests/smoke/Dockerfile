@@ -2,16 +2,16 @@ FROM oven/bun:latest
 
 WORKDIR /test
 
-# Install amps from the local tarball (mounted at build time)
-COPY idyllic-labs-amps-*.tgz /tmp/amps.tgz
-RUN bun install -g /tmp/amps.tgz && bun pm -g trust @idyllic-labs/amps
+# Install imps from the local tarball (mounted at build time)
+COPY idyllic-labs-imps-*.tgz /tmp/imps.tgz
+RUN bun install -g /tmp/imps.tgz && bun pm -g trust @idyllic-labs/imps
 
 # Create a minimal test agent
 RUN mkdir -p /test/agent && cat > /test/agent/agent.mdx << 'AGENT'
 # Agent: SmokeTest
 
 ## Purpose
-Verify amps works after a fresh install.
+Verify imps works after a fresh install.
 
 <Tool name="ping" description="Returns pong to verify inline tools work">
 

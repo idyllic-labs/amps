@@ -137,7 +137,7 @@ export class AgentTUI {
     const identity = this.runtime.getIdentity();
     const logo =
       `${theme.primary}╔═══════════════════════════════════════════╗\n` +
-      `║  ${theme.success}amps${theme.reset} ${theme.muted}→ ${theme.primary}${this.agentName}${theme.reset}                            ${theme.primary}║\n` +
+      `║  ${theme.success}imps${theme.reset} ${theme.muted}→ ${theme.primary}${this.agentName}${theme.reset}                            ${theme.primary}║\n` +
       `${theme.primary}╚═══════════════════════════════════════════╝${theme.reset}\n`;
 
     const purpose = identity?.purpose ? `${theme.muted}${identity.purpose}${theme.reset}\n` : "";
@@ -431,7 +431,7 @@ export class AgentTUI {
     this.modelInfo = this.runtime.getLastModelInfo();
 
     if ((await this.sessionManager.loadHistory()).length === 0) {
-      this.chatContainer.addChild(new Text(`${theme.success}Welcome to amps!${theme.reset}`, 1, 0));
+      this.chatContainer.addChild(new Text(`${theme.success}Welcome to imps!${theme.reset}`, 1, 0));
       this.chatContainer.addChild(new Spacer(1));
     }
 

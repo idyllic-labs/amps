@@ -1,11 +1,11 @@
 {
-  "name": "@idyllic-labs/amps",
+  "name": "@idyllic-labs/imps",
   "version": "0.1.0-alpha.5",
   "description": "Scriptable AI agents defined in Markdown. Write an .mdx file, get a tool-calling agent with a TUI.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/idyllic-labs/amps"
+    "url": "https://github.com/idyllic-labs/imps"
   },
   "keywords": [
     "ai",
@@ -23,7 +23,7 @@
     "packages/*"
   ],
   "bin": {
-    "amps": "./bin/amps.js"
+    "imps": "./bin/imps.js"
   },
   "files": [
     "bin/",
@@ -49,7 +49,7 @@
     "format": "oxfmt --write packages/ bin/",
     "test": "bun test packages/agent/tests/",
     "format:check": "oxfmt --check packages/ bin/",
-    "amps": "bun run bin/amps.js"
+    "imps": "bun run bin/imps.js"
   },
   "dependencies": {
     "@mariozechner/pi-agent-core": "0.51.2",

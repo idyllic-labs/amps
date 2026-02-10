@@ -34,7 +34,7 @@ async function execute(params: { query: string; max_results?: number }, ctx: any
 	const max = params.max_results ?? 5
 	const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`
 	const resp = await fetch(url, {
-		headers: { "User-Agent": "amps/1.0" },
+		headers: { "User-Agent": "imps/1.0" },
 	})
 	const html = await resp.text()
 
@@ -127,7 +127,7 @@ async function execute(params: { pattern: string; glob?: string; base?: string }
 async function execute(params: { url: string; method?: string; body?: string }, ctx: any) {
 	const opts: RequestInit = {
 		method: params.method ?? "GET",
-		headers: { "User-Agent": "amps/1.0", "Accept": "text/plain, application/json, text/html" },
+		headers: { "User-Agent": "imps/1.0", "Accept": "text/plain, application/json, text/html" },
 	}
 	if (params.body) {
 		opts.body = params.body

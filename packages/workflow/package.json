@@ -1,7 +1,7 @@
 {
-  "name": "@amps/workflow",
+  "name": "@imps/workflow",
   "bin": {
-    "amps-workflow": "./bin/amps-workflow.ts"
+    "imps-workflow": "./bin/imps-workflow.ts"
   },
   "files": [
     "src/",
@@ -11,7 +11,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "bun run bin/amps-workflow.ts"
+    "dev": "bun run bin/imps-workflow.ts"
   },
   "dependencies": {
     "@mariozechner/pi-ai": "0.51.2",

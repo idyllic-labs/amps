@@ -8,7 +8,7 @@ let tempDir: string;
 let skillsDir: string;
 
 beforeAll(async () => {
-  tempDir = mkdtempSync(join(tmpdir(), "amps-skills-"));
+  tempDir = mkdtempSync(join(tmpdir(), "imps-skills-"));
   skillsDir = join(tempDir, "skills");
   mkdirSync(skillsDir);
 

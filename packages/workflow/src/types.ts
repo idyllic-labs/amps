@@ -1,5 +1,5 @@
 /**
- * amps/workflow type definitions
+ * imps/workflow type definitions
  * All shared types for the workflow parser, executor, and CLI
  */
 

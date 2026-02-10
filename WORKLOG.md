@@ -1,5 +1,9 @@
 # Worklog
 
+## 2026-02-10
+
+Renamed project from `amps` (Agent MetaProgramming System) to `imps` (Intelligence MetaProgramming System). Package becomes `@idyllic-labs/imps`, CLI command becomes `imps`, config dir becomes `~/.imps`, env vars become `IMPS_MODEL`/`IMPS_HOME`. Renamed all bin files (`amps.js` → `imps.js`, `amps-workflow.ts` → `imps-workflow.ts`, `amps-agent.ts` → `imps-agent.ts`), updated all 3 `package.json` files, all source files, tests, CI/CD, smoke tests, Dockerfile, and documentation. Historical worklog entries preserved as-is.
+
 ## 2026-02-09 - evening
 
 Replaced the custom hand-built React chat UI (~550 lines) with `@assistant-ui/react` +
@@ -152,9 +156,9 @@ All 7 smoke tests pass in Docker (OrbStack). Confirms clean install from tarball
 
 ## 2026-02-09 - 3:00 AM
 
-Renamed package from `mdx-ai` to `@idyllic-labs/amps` (Agent MetaProgramming System). `mdx-ai` was taken on npm.
+Renamed package from `mdx-ai` to `@idyllic-labs/amps` (Agent MetaProgramming System). `mdx-ai` was taken on npm. Later renamed to `@idyllic-labs/imps` (Intelligence MetaProgramming System).
 
-Renamed everything user-facing: CLI command (`amps`), config dir (`~/.amps`), env vars (`AMPS_MODEL`, `AMPS_HOME`), TUI branding, help text, smoke tests. Internal function names updated too (`getMdxAiHome` → `getAmpsHome`). Comments and temp dir prefixes left as-is — not worth the churn.
+Renamed everything user-facing: CLI command, config dir, env vars, TUI branding, help text, smoke tests. Internal function names updated too.
 
 Restructured the CLI entry point: `bin/amps.js` is a 2-line `.js` wrapper (`#!/usr/bin/env bun` + import) that loads `packages/cli/bin/amps.ts`. This works around npm stripping `.ts` bin entries while keeping all the actual code in TypeScript.
 

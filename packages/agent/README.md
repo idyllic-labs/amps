@@ -3,7 +3,7 @@
 Persistent tool-calling agents defined in Markdown. Write an `agent.mdx` file, get an interactive agent with custom tools, session history, and a terminal UI.
 
 ```bash
-amps agent examples/agents/WeatherAssistant
+imps agent examples/agents/WeatherAssistant
 ```
 
 ## Quick start
@@ -38,9 +38,9 @@ async function execute(params: { name: string }, ctx: any) {
 Run it:
 
 ```bash
-amps agent my-agent                        # interactive TUI
-amps agent my-agent --prompt "Say hi to Alice"  # single prompt
-amps agent my-agent --session dev           # named session
+imps agent my-agent                        # interactive TUI
+imps agent my-agent --prompt "Say hi to Alice"  # single prompt
+imps agent my-agent --session dev           # named session
 ```
 
 ## Agent format
@@ -156,8 +156,8 @@ builtins: read_file, write_file, bash
 Session history persists across conversations. The full message history (including tool calls and results) is saved and replayed on resume.
 
 ```bash
-amps agent my-agent --session project-a    # named session
-amps agent my-agent                        # default session
+imps agent my-agent --session project-a    # named session
+imps agent my-agent                        # default session
 ```
 
 Sessions are stored as JSON in `<agent-dir>/sessions/`.
@@ -165,9 +165,9 @@ Sessions are stored as JSON in `<agent-dir>/sessions/`.
 ## CLI
 
 ```
-amps agent <path>                  Interactive TUI
-amps agent <path> --prompt "…"     Single prompt, then exit
-amps agent <path> --session <id>   Resume a named session
+imps agent <path>                  Interactive TUI
+imps agent <path> --prompt "…"     Single prompt, then exit
+imps agent <path> --session <id>   Resume a named session
 ```
 
 ## Examples

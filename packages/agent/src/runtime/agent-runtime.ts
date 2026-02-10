@@ -19,7 +19,7 @@ import { getModel, type Message } from "@mariozechner/pi-ai";
 const MAX_TURNS = 50;
 
 /**
- * Main amps/agent runtime
+ * Main imps/agent runtime
  * Orchestrates markdown-based agent configuration with pi-agent-core Agent loop
  */
 export class AgentRuntime {
@@ -56,7 +56,7 @@ export class AgentRuntime {
    * Initialize the runtime — load configs, modules, and create Agent instance
    */
   async initialize(): Promise<void> {
-    console.log("Initializing amps agent runtime...\n");
+    console.log("Initializing imps agent runtime...\n");
 
     // 1. Load agent identity
     await this.loadAgentIdentity();

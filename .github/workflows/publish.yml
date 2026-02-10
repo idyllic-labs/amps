@@ -44,4 +44,4 @@ jobs:
       - name: Summary
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "Published @idyllic-labs/amps@$VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "Published @idyllic-labs/imps@$VERSION" >> $GITHUB_STEP_SUMMARY

@@ -1,5 +1,5 @@
 /**
- * Simple logger utility for amps/agent
+ * Simple logger utility for imps/agent
  */
 
 export enum LogLevel {

@@ -547,7 +547,7 @@ function Header({ identity, connected }: { identity: IdentityMsg | null; connect
           <div className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
           <div>
             <h1 className="text-sm font-semibold text-gray-100">
-              {identity?.name || "amps agent"}
+              {identity?.name || "imps agent"}
             </h1>
             {identity?.purpose && (
               <p className="text-xs text-gray-500 mt-0.5">{identity.purpose}</p>

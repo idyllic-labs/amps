@@ -1,5 +1,5 @@
 /**
- * amps/workflow Executor
+ * imps/workflow Executor
  *
  * Executes parsed WorkflowDefinition objects with context accumulation.
  * Each <Generation> sees ALL accumulated context above it.
@@ -42,9 +42,9 @@ import { interpolateString, evaluateCondition, resolveExpression } from "./expre
 const FALLBACK_MODEL = "azure/gpt-5.2";
 
 function getDefaultModel(): string {
-  if (process.env.AMPS_MODEL) return process.env.AMPS_MODEL;
+  if (process.env.IMPS_MODEL) return process.env.IMPS_MODEL;
   try {
-    const configPath = resolve(homedir(), ".amps", "config.json");
+    const configPath = resolve(homedir(), ".imps", "config.json");
     if (existsSync(configPath)) {
       const config = JSON.parse(readFileSync(configPath, "utf-8"));
       if (config.defaultModel) return config.defaultModel;

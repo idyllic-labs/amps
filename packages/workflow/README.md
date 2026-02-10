@@ -3,7 +3,7 @@
 Deterministic document execution. Prose becomes prompt, components become actions, context accumulates top-to-bottom.
 
 ```bash
-amps workflow run examples/workflows/blog-post.mdx --input topic="distributed systems"
+imps workflow run examples/workflows/blog-post.mdx --input topic="distributed systems"
 ```
 
 ## How it works
@@ -212,8 +212,8 @@ The expression scope includes all declared inputs and all named outputs produced
 ## CLI
 
 ```
-amps workflow run <file.mdx> [options]    Execute a workflow
-amps workflow check <file.mdx>            Validate without executing
+imps workflow run <file.mdx> [options]    Execute a workflow
+imps workflow check <file.mdx>            Validate without executing
 
 Options:
   --input key=value    Pass an input (repeatable)
